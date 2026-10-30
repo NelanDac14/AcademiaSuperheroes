@@ -61,7 +61,7 @@ public class HeroeTecnologico extends Superheroe{
         //Varriables
         double boniNivelTec = 0;
         
-        //Validamos el estado del superhéro mutante
+        //Validamos el nivel del superhéro tecnológico
         switch (getEstado()) {
             case "Básico": //Bonificación de $200
                 boniNivelTec = 200;
@@ -79,6 +79,4 @@ public class HeroeTecnologico extends Superheroe{
         //Retornamos al bonificación obtenida según el nivel y su cantidad de gadgets
         return boniNivelTec + (getCantidadGadgets() * 50);
     }
-    
-    
 }
