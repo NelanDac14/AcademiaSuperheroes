@@ -66,16 +66,8 @@ public class EquipoRescate {
         return contadorId;
     }
 
-    public static void setContadorId(int contadorId) {
-        EquipoRescate.contadorId = contadorId;
-    }
-    
     public String getIdEquipo() {
         return idEquipo;
-    }
-
-    public void setIdEquipo(String idEquipo) {
-        this.idEquipo = idEquipo;
     }
 
     public String getNombreEquipo() {
@@ -125,7 +117,7 @@ public class EquipoRescate {
     public void setListaSuperheroes(ArrayList<Superheroe> listaSuperheroes) {
         this.listaSuperheroes = listaSuperheroes;
     }
-    
+
     public double getCostoOperativo() {
         return costoOperativo;
     }
@@ -133,6 +125,7 @@ public class EquipoRescate {
     public void setCostoOperativo(double costoOperativo) {
         this.costoOperativo = costoOperativo;
     }
+    
     
     // Métodos adicionales
     
@@ -162,14 +155,19 @@ public class EquipoRescate {
      * salarios mensuales de estos, añadiendo valor adicional según 
      * nivel de amenaza, si este utiliza tecnología y en caso de
      * que el grupo poseea más de 5 superhéroes.
+     * 
+     * También se toma en cuenta las bonificaciones correspondiente a cada
+     * héroe del grupo y se suman al costo operativo
      */
     public void calcularCostoOperativo(){
         // Se reinicializa el costo para no acumular resultados
         costoOperativo = 0.0;
         
         // Suma de los salarios de todos los superhéroes pertenecientes al equipo
+        // También se suman todas las bonificaciones de cada uno de ellos
         for(Superheroe superHeroe : listaSuperheroes){
             costoOperativo += superHeroe.getSalarioMensual();
+            costoOperativo += superHeroe.calcularBonificacion();
         }
         
         //Costo adicional según nivel de amenaza

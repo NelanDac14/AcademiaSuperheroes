@@ -68,15 +68,18 @@ public class HeroeMutante extends Superheroe{
                 boniTipoMuta = 400;                
                 break;
             default:
-                throw new AssertionError();
+                /* No aplicamos valor por default debido a que en la clase
+                no se espera ningún valor incorrecto y por lo cual la validaciones
+                no corresponden a esta clase*/
+                break;
         }
         
         //Validamos el control de poder del héroe mutante
-       if(getControlPoder() >= 0 || getControlPoder() <= 30){ // Entre 0-30
+       if(getControlPoder() >= 0 && getControlPoder() <= 30){ // Entre 0-30
            boniContrPoder = 150;
-       } else if(getControlPoder() > 30 || getControlPoder() <= 70){ // Entre 31-70
+       } else if(getControlPoder() > 30 && getControlPoder() <= 70){ // Entre 31-70
            boniContrPoder = 450;
-       } else if (getControlPoder() > 70 || getControlPoder() <= 100){ // Entre 71-100
+       } else if (getControlPoder() > 70 && getControlPoder() <= 100){ // Entre 71-100
            boniContrPoder = 900;
        }
        

@@ -73,7 +73,10 @@ public class HeroeTecnologico extends Superheroe{
                 boniNivelTec = 900;                
                 break;
             default:
-                throw new AssertionError();
+                /* No aplicamos valor por default debido a que en la clase
+                no se espera ningún valor incorrecto y por lo cual la validaciones
+                no corresponden a esta clase*/
+                break;
         }
         
         //Retornamos al bonificación obtenida según el nivel y su cantidad de gadgets

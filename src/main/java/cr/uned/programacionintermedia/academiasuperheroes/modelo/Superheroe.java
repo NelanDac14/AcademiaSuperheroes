@@ -44,6 +44,14 @@ public abstract class Superheroe {
         this.salarioMensual = 0.0;
     }
 
+    public static int getContadorId() {
+        return contadorId;
+    }
+
+    public String getIdHeroe() {
+        return idHeroe;
+    }
+
     public String getNombreHeroico() {
         return nombreHeroico;
     }

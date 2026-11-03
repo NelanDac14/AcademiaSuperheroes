@@ -66,7 +66,10 @@ public class HeroeMagico extends Superheroe{
                 boniTipoMagia = 600;
                 break;
             default:
-                throw new AssertionError();
+                /* No aplicamos valor por default debido a que en la clase
+                no se espera ningún valor incorrecto y por lo cual la validaciones
+                no corresponden a esta clase*/
+                break;
         }
         
         //Retornamos la bonificaciónpor tipo de magia + bonificación por la cantidad de hechizon
