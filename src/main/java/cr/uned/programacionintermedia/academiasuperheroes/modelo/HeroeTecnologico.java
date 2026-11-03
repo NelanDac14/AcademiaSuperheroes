@@ -62,7 +62,7 @@ public class HeroeTecnologico extends Superheroe{
         double boniNivelTec = 0;
         
         //Validamos el nivel del superhéro tecnológico
-        switch (getEstado()) {
+        switch (getNivelTecnologia()) {
             case "Básico": //Bonificación de $200
                 boniNivelTec = 200;
                 break;

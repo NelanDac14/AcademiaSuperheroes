@@ -44,8 +44,8 @@ public class HeroeMutante extends Superheroe{
      * 
      * Método que se hereda de Superhéro y se sobre escribe,
      * su función principal es calcular la bonificación del
-     * superhéroe tecnológico, esto según su nivel y cantidad
-     * de gadgets que utiliza.
+     * superhéroe mutante, esto según su tipo de mutación y su 
+     * control de poder
      * 
      * @return Devuelve la bonificación calculada según la fórmula: 
      *  monto por mutación + monto por nivel de control de poder
