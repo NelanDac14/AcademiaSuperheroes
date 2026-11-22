@@ -4,6 +4,11 @@ import cr.uned.programacionintermedia.academiasuperheroes.modelo.HeroeMagico;
 import cr.uned.programacionintermedia.academiasuperheroes.modelo.HeroeMutante;
 import cr.uned.programacionintermedia.academiasuperheroes.modelo.HeroeTecnologico;
 import cr.uned.programacionintermedia.academiasuperheroes.modelo.Superheroe;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 /**
@@ -427,7 +432,7 @@ public class GestionSuperheroes {
             /* 
             Parcemos el héroe existente y el héroe con los datos actualizados
             al tipo de héroe correspondiente
-            */
+             */
             HeroeTecnologico existente = (HeroeTecnologico) heroeExistente;
 
             HeroeTecnologico nuevos = (HeroeTecnologico) datosActualizados;
@@ -441,7 +446,7 @@ public class GestionSuperheroes {
             /* 
             Parcemos el héroe existente y el héroe con los datos actualizados
             al tipo de héroe correspondiente
-            */
+             */
             HeroeMutante existente = (HeroeMutante) heroeExistente;
 
             HeroeMutante nuevos = (HeroeMutante) datosActualizados;
@@ -455,7 +460,7 @@ public class GestionSuperheroes {
             /* 
             Parcemos el héroe existente y el héroe con los datos actualizados
             al tipo de héroe correspondiente
-            */
+             */
             HeroeMagico existente = (HeroeMagico) heroeExistente;
 
             HeroeMagico nuevos = (HeroeMagico) datosActualizados;
@@ -471,64 +476,63 @@ public class GestionSuperheroes {
 
     /**
      * Cambiar el estado de un superhéroe registrado
-     * 
-     * Busca el heroe mediante su identificador y verifica
-     * que el nuevo estado corresponda a una opción permitida
-     * 
+     *
+     * Busca el heroe mediante su identificador y verifica que el nuevo estado
+     * corresponda a una opción permitida
+     *
      * @param idHeroe ID del superhéroe
-     * 
+     *
      * @param nuevoEstado El nuevo estado del superhéroes
-     * 
-     * @return true si el estado se cambió con éxito; false en caso
-     * contrario
+     *
+     * @return true si el estado se cambió con éxito; false en caso contrario
      */
-    public boolean cambiarEstadoHeroe(String idHeroe, String nuevoEstado){
+    public boolean cambiarEstadoHeroe(String idHeroe, String nuevoEstado) {
         // Validamos el nuevo estado
-        if (!esOpcionValida(nuevoEstado, 
+        if (!esOpcionValida(nuevoEstado,
                 "Disponible", "En misión", "Recuperación")) {
-            return false;            
+            return false;
         }
-        
+
         // Buscamos el superhéroe mediante su ID
-        Superheroe heroe =  buscarHeroePorId(idHeroe);
-        
+        Superheroe heroe = buscarHeroePorId(idHeroe);
+
         // Comprobamos que el superhéroe exista
         if (heroe == null) {
             return false;
         }
-        
+
         // Actualizamos únicamente el estado
         heroe.setEstado(nuevoEstado.trim());
-        
+
         // Se actualiza el estado con éxito
         return true;
     }
-    
+
     /**
      * Elimina un superhéroe de la colección correspondiente
-     * 
-     * Busca el registro mediante su ID y determina a cual 
-     * colección pertenece antes de eliminarlo
-     * 
+     *
+     * Busca el registro mediante su ID y determina a cual colección pertenece
+     * antes de eliminarlo
+     *
      * @param idHeroe ID del superhéroe que se eliminará
-     * 
-     * @return true si se eliminó correctamente; false si no existe
-     * el ID buscado
-     */ 
-    public boolean eliminarHeroe(String idHeroe){
+     *
+     * @return true si se eliminó correctamente; false si no existe el ID
+     * buscado
+     */
+    public boolean eliminarHeroe(String idHeroe) {
         // Validamos que el identificador no esté vacío
         if (idHeroe == null || idHeroe.trim().isEmpty()) {
             return false;
         }
-        
+
         //Buscamos el superhéroe en las 3 colecciones
         Superheroe heroe = buscarHeroePorId(idHeroe);
-        
+
         // Comprobamos que el registro existe
         if (heroe == null) {
             return false;
         }
-        
+
         // Identificamos la colección correspondiente y eliminamos el superhéroe
         if (heroe instanceof HeroeTecnologico) {
             //Retorna true una vez eliminado el superhéroe parceado
@@ -540,8 +544,97 @@ public class GestionSuperheroes {
             //Retorna true una vez eliminado el superhéroe parceado
             return heroesMagicos.remove((HeroeMagico) heroe);
         }
-        
+
         return false;
     }
-    
+
+    /**
+     * Guarda los superhéroes registrados en 3 archivos independientes según su
+     * tipo
+     *
+     * Los archivos conservan los identificadores y todos los atributos
+     * generales y específicos de cada héroe
+     *
+     * @return true si los 3 archivos se guardaron correctamente
+     */
+    public boolean guardarSuperheroes() {
+        // Intentamos crear los 3 archivos .txt
+        try (
+                // Archivo HeroeTecnologico.txt
+                BufferedWriter escritorTecnológico = Files.newBufferedWriter(
+                        Paths.get("HeroeTecnologico.txt"),
+                        StandardCharsets.UTF_8); // Archivo HeroeMutante.txt
+                 BufferedWriter escritorMutante = Files.newBufferedWriter(
+                        Paths.get("HeroeMutante.txt"),
+                        StandardCharsets.UTF_8); // Archivo HeroeMagico.txt
+                 BufferedWriter escritorMagico = Files.newBufferedWriter(
+                        Paths.get("HeroeMagico.txt"),
+                        StandardCharsets.UTF_8);) {
+            //Guardamos los héroes tecnológicos
+            for(HeroeTecnologico heroe : heroesTecnologicos){
+                
+                // Creamos el string linea con el formato correspondiente
+                String linea = String.join(";", heroe.getIdHeroe(),
+                        heroe.getNombreHeroico(),
+                        heroe.getNombreReal(),
+                        heroe.getEstado(),
+                        String.valueOf(heroe.getSalarioMensual()),
+                        heroe.getNivelTecnologia(),
+                        String.valueOf(heroe.getCantidadGadgets())
+                );
+                
+                // Agregamos al archivo .txt correspondiente
+                escritorTecnológico.write(linea);
+                escritorTecnológico.newLine();                
+            }
+            
+            //Guardamos los héroes Mutantes
+            for(HeroeMutante heroe : heroesMutantes){           
+                
+                // Creamos el string linea con el formato correspondiente
+                String linea = String.join(";",
+                        heroe.getIdHeroe(),
+                        heroe.getNombreHeroico(),
+                        heroe.getNombreReal(),
+                        heroe.getEstado(),
+                        String.valueOf(heroe.getSalarioMensual()),
+                        heroe.getTipoMutacion(),
+                        String.valueOf(heroe.getControlPoder())
+                );
+                
+                // Agregamos al archivo .txt correspondiente
+                escritorMutante.write(linea);
+                escritorMutante.newLine();                
+            }
+            
+            //Guardamos los héroes Mutantes
+            for(HeroeMagico heroe : heroesMagicos){           
+                
+                // Creamos el string linea con el formato correspondiente
+                String linea = String.join(";",
+                        heroe.getIdHeroe(),
+                        heroe.getNombreHeroico(),
+                        heroe.getNombreReal(),
+                        heroe.getEstado(),
+                        String.valueOf(heroe.getSalarioMensual()),
+                        heroe.getTipoMagia(),
+                        String.valueOf(heroe.getCantHechizos())
+                );
+                
+                // Agregamos al archivo .txt correspondiente
+                escritorMagico.write(linea);
+                escritorMagico.newLine();                
+            }
+            
+            //Se guarda correctamente dentro de sus archivos respectivos
+            return true;
+
+        } catch (IOException e) {
+            // En caso de error se muestra el mensaje 
+            System.err.println("Error al guardar los archivos de superhéroes: "
+            + e.getMessage());
+            return false;
+        }
+    }
+
 }
