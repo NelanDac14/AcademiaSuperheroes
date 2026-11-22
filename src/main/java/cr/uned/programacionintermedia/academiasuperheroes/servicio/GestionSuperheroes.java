@@ -3,6 +3,7 @@ package cr.uned.programacionintermedia.academiasuperheroes.servicio;
 import cr.uned.programacionintermedia.academiasuperheroes.modelo.HeroeMagico;
 import cr.uned.programacionintermedia.academiasuperheroes.modelo.HeroeMutante;
 import cr.uned.programacionintermedia.academiasuperheroes.modelo.HeroeTecnologico;
+import cr.uned.programacionintermedia.academiasuperheroes.modelo.Superheroe;
 import java.util.ArrayList;
 
 /**
@@ -38,7 +39,9 @@ public class GestionSuperheroes {
         this.heroesMutantes = new ArrayList<>();
         this.heroesMagicos = new ArrayList<>();
     }
-
+    
+    
+    // Métodos adicionales
     /**
      * Registra un nuevo superhéroe tecnológico
      *
@@ -249,8 +252,7 @@ public class GestionSuperheroes {
      * 
      * @return true si coincido con alguna opción; 
      * false caso contrario.
-     */
-    
+     */    
     private boolean esOpcionValida(String valor, String... opciones){
         // Validamos que el valor no sea nulo
         if(valor == null){
@@ -266,4 +268,70 @@ public class GestionSuperheroes {
         
         return false;
     }
+
+    /**
+     * Busca un superhéroe por su ID
+     * 
+     * Recorre las 3 colecciones para localizar el héroe
+     * 
+     * @param idHeroe Identificador del superhéroe
+     * 
+     * @return El Objeto encontrado como superhéroe; retorna null 
+     * si no existe
+     */    
+    public Superheroe buscarHeroePorId(String idHeroe){
+        // Validamos que se haya proporcionado un identificador
+        if(idHeroe == null || idHeroe.trim().isEmpty()){
+            return null;
+        }
+        
+        // Aceptamos el identificador recibido
+        String idBuscado = idHeroe.trim();
+        
+        // Buscamos en la colección de héroes tecnológicos
+        for(HeroeTecnologico heroeTecnologico : heroesTecnologicos){
+            /* En caso de cumplirse que no sea nulo
+            y que también coincida se retorna como encontrado el 
+            héroe
+            */
+            
+            if(heroeTecnologico.getIdHeroe() != null 
+                    && heroeTecnologico.getIdHeroe().equalsIgnoreCase(idBuscado)){
+                return heroeTecnologico;
+            }            
+        }
+        
+        // Buscamos en la colección de héroes mutantes
+        for(HeroeMutante heroeMutante : heroesMutantes){
+            /* En caso de cumplirse que no sea nulo
+            y que también coincida se retorna como encontrado el 
+            héroe
+            */
+            
+            if(heroeMutante.getIdHeroe() != null 
+                    && heroeMutante.getIdHeroe().equalsIgnoreCase(idBuscado)){
+                return heroeMutante;
+            }            
+        }
+        
+        // Buscamos en la colección de héroes mágicos
+        for(HeroeMagico heroeMagico : heroesMagicos){
+            /* En caso de cumplirse que no sea nulo
+            y que también coincida se retorna como encontrado el 
+            héroe
+            */
+            
+            if(heroeMagico.getIdHeroe() != null 
+                    && heroeMagico.getIdHeroe().equalsIgnoreCase(idBuscado)){
+                return heroeMagico;
+            }            
+        }
+        
+        /*Si termina todos los recorridos, significa que 
+        no existe el ID buscado por lo que retorna null
+        */
+        return null;
+    }
+    
+    
 }
