@@ -39,8 +39,7 @@ public class GestionSuperheroes {
         this.heroesMutantes = new ArrayList<>();
         this.heroesMagicos = new ArrayList<>();
     }
-    
-    
+
     // Métodos adicionales
     /**
      * Registra un nuevo superhéroe tecnológico
@@ -123,7 +122,6 @@ public class GestionSuperheroes {
      * @return true si se registró correctamente; False si los datos no cumplen
      * las validaciones
      */
-    
     public boolean agregarHeroeMutante(String nombreHeroico,
             String nombreReal,
             String estado,
@@ -164,21 +162,21 @@ public class GestionSuperheroes {
      *
      * Valida los datos generales y específicos, genera automáticamente su
      * identificador y lo almacena en la colección correspondiente
-     * 
+     *
      * @param nombreHeroico Nombre heroico.
-     * 
+     *
      * @param nombreReal Nombre real.
-     * 
+     *
      * @param estado Estado actual.
-     * 
+     *
      * @param salarioMensual Salario mensual.
-     * 
+     *
      * @param tipoMagia Tipo de magia.
-     * 
+     *
      * @param cantidadHechizos Cantidad de hechizos.
-     * 
-     * @return true si se registró correctamente; False si
-     * los datos no cumplen las validaciones
+     *
+     * @return true si se registró correctamente; False si los datos no cumplen
+     * las validaciones
      */
     public boolean agregarHeroeMagico(String nombreHeroico,
             String nombreReal,
@@ -214,21 +212,20 @@ public class GestionSuperheroes {
 
         return true;
     }
-    
+
     /**
      * Valida datos generales de superhéroe
-     * 
-     * Comprueba que los datos generales del superhéroe
-     * cumpla con los requisitos establecidos
-     * 
-     * @return true si los datos son validos, false si estos
-     * son incorrectos
+     *
+     * Comprueba que los datos generales del superhéroe cumpla con los
+     * requisitos establecidos
+     *
+     * @return true si los datos son validos, false si estos son incorrectos
      */
     private boolean validarDatosGenerales(String nombreHeroico,
             String nombreReal,
             String estado,
-            double salarioMensual){
-        
+            double salarioMensual) {
+
         return nombreHeroico != null
                 && nombreHeroico.trim().length() >= 3
                 && nombreReal != null
@@ -237,101 +234,274 @@ public class GestionSuperheroes {
                         estado, "Disponible", "En misión", "Recuperación")
                 && Double.isFinite(salarioMensual)
                 && salarioMensual >= 0;
-        
+
     }
-    
+
     /**
      * Valida si la opción es valida o no
-     * 
-     * Comprueba si un valor pertenece a las opciones
-     * permitidas para un determinado atributo
-     * 
+     *
+     * Comprueba si un valor pertenece a las opciones permitidas para un
+     * determinado atributo
+     *
      * @param valor Valor que se desea comprobar
-     * 
+     *
      * @param opciones Valores permitidos
-     * 
-     * @return true si coincido con alguna opción; 
-     * false caso contrario.
-     */    
-    private boolean esOpcionValida(String valor, String... opciones){
+     *
+     * @return true si coincido con alguna opción; false caso contrario.
+     */
+    private boolean esOpcionValida(String valor, String... opciones) {
         // Validamos que el valor no sea nulo
-        if(valor == null){
+        if (valor == null) {
             return false;
         }
-        
+
         // Recorremos las opciones para comparar el valor seleccionado
-        for(String opcion:opciones){
-            if(opcion.equals(valor.trim())){
-                return true;                
+        for (String opcion : opciones) {
+            if (opcion.equals(valor.trim())) {
+                return true;
             }
         }
-        
+
         return false;
     }
 
     /**
      * Busca un superhéroe por su ID
-     * 
+     *
      * Recorre las 3 colecciones para localizar el héroe
-     * 
+     *
      * @param idHeroe Identificador del superhéroe
-     * 
-     * @return El Objeto encontrado como superhéroe; retorna null 
-     * si no existe
-     */    
-    public Superheroe buscarHeroePorId(String idHeroe){
+     *
+     * @return El Objeto encontrado como superhéroe; retorna null si no existe
+     */
+    public Superheroe buscarHeroePorId(String idHeroe) {
         // Validamos que se haya proporcionado un identificador
-        if(idHeroe == null || idHeroe.trim().isEmpty()){
+        if (idHeroe == null || idHeroe.trim().isEmpty()) {
             return null;
         }
-        
+
         // Aceptamos el identificador recibido
         String idBuscado = idHeroe.trim();
-        
+
         // Buscamos en la colección de héroes tecnológicos
-        for(HeroeTecnologico heroeTecnologico : heroesTecnologicos){
+        for (HeroeTecnologico heroeTecnologico : heroesTecnologicos) {
             /* En caso de cumplirse que no sea nulo
             y que también coincida se retorna como encontrado el 
             héroe
-            */
-            
-            if(heroeTecnologico.getIdHeroe() != null 
-                    && heroeTecnologico.getIdHeroe().equalsIgnoreCase(idBuscado)){
+             */
+
+            if (heroeTecnologico.getIdHeroe() != null
+                    && heroeTecnologico.getIdHeroe().equalsIgnoreCase(idBuscado)) {
                 return heroeTecnologico;
-            }            
+            }
         }
-        
+
         // Buscamos en la colección de héroes mutantes
-        for(HeroeMutante heroeMutante : heroesMutantes){
+        for (HeroeMutante heroeMutante : heroesMutantes) {
             /* En caso de cumplirse que no sea nulo
             y que también coincida se retorna como encontrado el 
             héroe
-            */
-            
-            if(heroeMutante.getIdHeroe() != null 
-                    && heroeMutante.getIdHeroe().equalsIgnoreCase(idBuscado)){
+             */
+
+            if (heroeMutante.getIdHeroe() != null
+                    && heroeMutante.getIdHeroe().equalsIgnoreCase(idBuscado)) {
                 return heroeMutante;
-            }            
+            }
         }
-        
+
         // Buscamos en la colección de héroes mágicos
-        for(HeroeMagico heroeMagico : heroesMagicos){
+        for (HeroeMagico heroeMagico : heroesMagicos) {
             /* En caso de cumplirse que no sea nulo
             y que también coincida se retorna como encontrado el 
             héroe
-            */
-            
-            if(heroeMagico.getIdHeroe() != null 
-                    && heroeMagico.getIdHeroe().equalsIgnoreCase(idBuscado)){
+             */
+
+            if (heroeMagico.getIdHeroe() != null
+                    && heroeMagico.getIdHeroe().equalsIgnoreCase(idBuscado)) {
                 return heroeMagico;
-            }            
+            }
         }
-        
+
         /*Si termina todos los recorridos, significa que 
         no existe el ID buscado por lo que retorna null
-        */
+         */
         return null;
     }
-    
+
+    /**
+     * Actualizar Superhéroe
+     *
+     * Busca el superhéroe mediante su ID y actualiza sus atributos generales y
+     * específicos según su tipo
+     *
+     * @param idHeroe Identificador del superhéroe que se actualizará
+     *
+     * @param datosActualizados Objeto que contiene los nuevos datos
+     *
+     * @return true si la actualización fue exitosa; false en caso contrario
+     */
+    public boolean actualizarHeroe(String idHeroe, Superheroe datosActualizados) {
+        // Comprobamos que los datos recibidos sean validos
+        if (idHeroe == null || idHeroe.trim().isEmpty()
+                || datosActualizados == null) {
+            return false;
+        }
+
+        //Buscamos el superhéroe que se desea actualizar
+        Superheroe heroeExistente = buscarHeroePorId(idHeroe);
+
+        // Si no existe, no podemos actualizarlo
+        if (heroeExistente == null) {
+            return false;
+        }
+
+        //Validamos los atributos generales
+        if (!validarDatosGenerales(datosActualizados.getNombreHeroico(),
+                datosActualizados.getNombreReal(),
+                datosActualizados.getEstado(),
+                datosActualizados.getSalarioMensual())) {
+            return false;
+        }
+
+        /*
+        Verificamos que el objeto recibido sea del mismo
+        ripo que el superhéroe que ya está registrado
+         */
+        if (heroeExistente instanceof HeroeTecnologico
+                && datosActualizados instanceof HeroeTecnologico) {
+
+            //Parceamos los datos actualizados a tipos héroe tecnológico
+            HeroeTecnologico nuevosDatos = (HeroeTecnologico) datosActualizados;
+
+            // Validamos los atributos específicos
+            if (!esOpcionValida(nuevosDatos.getNivelTecnologia(),
+                    "Básico", "Intermedio", "Avanzado")
+                    || nuevosDatos.getCantidadGadgets() < 0) {
+
+                // Retornamos falso por que no es valido los datos recibidos
+                return false;
+
+            }
+
+        } else if (heroeExistente instanceof HeroeMutante
+                && datosActualizados instanceof HeroeMutante) {
+            //Parceamos los datos actualizados a tipo héroe mutante
+            HeroeMutante nuevosDatos = (HeroeMutante) datosActualizados;
+
+            // Validamos los atributos específicos
+            if (!esOpcionValida(nuevosDatos.getTipoMutacion(),
+                    "Genética", "Radioactiva", "Experimental")
+                    || nuevosDatos.getControlPoder() < 1
+                    || nuevosDatos.getControlPoder() > 100) {
+                return false;
+            }
+
+        } else if (heroeExistente instanceof HeroeMagico
+                && datosActualizados instanceof HeroeMagico) {
+            //Parceamos los datos actualizados a tipo de héroe mágico
+            HeroeMagico nuevosDatos = (HeroeMagico) datosActualizados;
+
+            if (!esOpcionValida(nuevosDatos.getTipoMagia(),
+                    "Elemental", "Oscura", " Sagrada")
+                    || nuevosDatos.getCantHechizos() < 0) {
+                return false;
+            }
+        } else {
+            //No se permite cambiar el tipo de superhéroe
+            return false;
+        }
+
+        // Actualizamos los atributos generales
+        heroeExistente.setNombreHeroico(
+                datosActualizados.getNombreHeroico().trim());
+        heroeExistente.setNombreReal(
+                datosActualizados.getNombreReal().trim());
+        heroeExistente.setEstado(
+                datosActualizados.getEstado().trim());
+        heroeExistente.setSalarioMensual(
+                datosActualizados.getSalarioMensual());
+
+        //Actualizamos los atributos específicos
+        if (heroeExistente instanceof HeroeTecnologico) {
+
+            /* 
+            Parcemos el héroe existente y el héroe con los datos actualizados
+            al tipo de héroe correspondiente
+            */
+            HeroeTecnologico existente = (HeroeTecnologico) heroeExistente;
+
+            HeroeTecnologico nuevos = (HeroeTecnologico) datosActualizados;
+
+            //Se actualizan los atributos específicos según el tipos de héroe
+            existente.setNivelTecnologia(nuevos.getNivelTecnologia());
+            existente.setCantidadGadgets(nuevos.getCantidadGadgets());
+
+        } else if (heroeExistente instanceof HeroeMutante) {
+
+            /* 
+            Parcemos el héroe existente y el héroe con los datos actualizados
+            al tipo de héroe correspondiente
+            */
+            HeroeMutante existente = (HeroeMutante) heroeExistente;
+
+            HeroeMutante nuevos = (HeroeMutante) datosActualizados;
+
+            //Se actualizan los atributos específicos según el tipos de héroe
+            existente.setTipoMutacion(nuevos.getTipoMutacion());
+            existente.setControlPoder(nuevos.getControlPoder());
+
+        } else if (heroeExistente instanceof HeroeMagico) {
+
+            /* 
+            Parcemos el héroe existente y el héroe con los datos actualizados
+            al tipo de héroe correspondiente
+            */
+            HeroeMagico existente = (HeroeMagico) heroeExistente;
+
+            HeroeMagico nuevos = (HeroeMagico) datosActualizados;
+
+            //Se actualizan los atributos específicos según el tipos de héroe
+            existente.setTipoMagia(nuevos.getTipoMagia());
+            existente.setCantHechizos(nuevos.getCantHechizos());
+        }
+
+        //Retornamos True debido a que se actualizó correctamente
+        return true;
+    }
+
+    /**
+     * Cambiar el estado de un superhéroe registrado
+     * 
+     * Busca el heroe mediante su identificador y verifica
+     * que el nuevo estado corresponda a una opción permitida
+     * 
+     * @param idHeroe ID del superhéroe
+     * 
+     * @param nuevoEstado El nuevo estado del superhéroes
+     * 
+     * @return true si el estado se cambió con éxito; false en caso
+     * contrario
+     */
+    public boolean cambiarEstadoHeroe(String idHeroe, String nuevoEstado){
+        // Validamos el nuevo estado
+        if (!esOpcionValida(nuevoEstado, 
+                "Disponible", "En misión", "Recuperación")) {
+            return false;            
+        }
+        
+        // Buscamos el superhéroe mediante su ID
+        Superheroe heroe =  buscarHeroePorId(idHeroe);
+        
+        // Comprobamos que el superhéroe exista
+        if (heroe == null) {
+            return false;
+        }
+        
+        // Actualizamos únicamente el estado
+        heroe.setEstado(nuevoEstado.trim());
+        
+        // Se actualiza el estado con éxito
+        return true;
+    }
     
 }
