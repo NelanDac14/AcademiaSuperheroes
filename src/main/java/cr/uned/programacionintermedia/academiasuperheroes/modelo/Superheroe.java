@@ -7,15 +7,17 @@ package cr.uned.programacionintermedia.academiasuperheroes.modelo;
  * @version 1.0
  */
 public abstract class Superheroe {
-    private static int contadorId;
+
     private String idHeroe;
     private String nombreHeroico;
     private String nombreReal;
     private String estado;
     private double salarioMensual;
-    
+
     /**
      * Crea un Superhéroe dentro del sistema
+     *
+     * @param idHeroe ID único del superhéroe
      *
      * @param nombreHeroico Nombre del Superhéroe: debe tener mínimo 3
      * caracteres y debe ser ingresado por usuario.
@@ -29,75 +31,73 @@ public abstract class Superheroe {
      * @param salarioMensual Salario mensual del Superhéroe, dato ingresado por
      * el usuario
      */
-    public Superheroe(String nombreHeroico, String nombreReal, String estado, double salarioMensual) {
+    public Superheroe(String idHeroe, String nombreHeroico, String nombreReal, String estado, double salarioMensual) {
+        this.idHeroe = idHeroe;
         this.nombreHeroico = nombreHeroico;
         this.nombreReal = nombreReal;
         this.estado = estado;
         this.salarioMensual = salarioMensual;
     }
-    
+
     //Costructor sobrecargado
     public Superheroe() {
+        this.idHeroe = "";
         this.nombreHeroico = "";
         this.nombreReal = "";
         this.estado = "";
         this.salarioMensual = 0.0;
     }
 
-    public static int getContadorId() {
-        return contadorId;
-    }
-
+    // Obtiene el ID del Héroe
     public String getIdHeroe() {
         return idHeroe;
     }
 
+    // Coloca el ID del Héroe
+    public void setIdHeroe(String idHeroe) {
+        this.idHeroe = idHeroe;
+    }
+
+    // Obtiene el Nombre Heroico
     public String getNombreHeroico() {
         return nombreHeroico;
     }
 
+    // Coloca el nombre heroico
     public void setNombreHeroico(String nombreHeroico) {
         this.nombreHeroico = nombreHeroico;
     }
 
+    // Obtiene el nombre real
     public String getNombreReal() {
         return nombreReal;
     }
 
+    //Coloca el nombre real
     public void setNombreReal(String nombreReal) {
         this.nombreReal = nombreReal;
     }
 
+    // Obtiene el estado
     public String getEstado() {
         return estado;
     }
 
+    // Coloca el estado
     public void setEstado(String estado) {
         this.estado = estado;
     }
 
+    // Obtiene el salario mensual
     public double getSalarioMensual() {
         return salarioMensual;
     }
 
+    // Coloca el salario mensual
     public void setSalarioMensual(double salarioMensual) {
         this.salarioMensual = salarioMensual;
     }
-    
-    //Métodos adicionales
-    public void generadorIdHeroe() {
-        // Aumentamos el contador de héroes
-        contadorId++;
 
-        if (String.valueOf(contadorId).length() >= 2) {
-            // En caso de que la numeración del contadorId sea mayor a 9
-            this.idHeroe = "HER-" + contadorId;
-        } else {
-            // En caso de que la numeración del contadorId sea menor a 9
-            this.idHeroe = "HER-0" + contadorId;
-        }
-    }
-    
     //Método abstracto
     public abstract double calcularBonificacion();
 }

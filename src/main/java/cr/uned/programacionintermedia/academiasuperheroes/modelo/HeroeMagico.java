@@ -9,15 +9,15 @@ public class HeroeMagico extends Superheroe{
     private int cantHechizos; // Número entero ingresado por usuario
 
     // Constructor sobrecargado
-    public HeroeMagico(String tipoMagia, int cantHechizos, String nombreHeroico, String nombreReal, String estado, double salarioMensual) {
-        super(nombreHeroico, nombreReal, estado, salarioMensual);
+    public HeroeMagico(String idHeroe, String tipoMagia, int cantHechizos, String nombreHeroico, String nombreReal, String estado, double salarioMensual) {
+        super(idHeroe, nombreHeroico, nombreReal, estado, salarioMensual);
         this.tipoMagia = tipoMagia;
         this.cantHechizos = cantHechizos;
     }
     
     // Constructor vacío
     public HeroeMagico() {
-        super("", "", "", 0.0);
+        super("", "", "", "", 0.0);
         this.tipoMagia = "";
         this.cantHechizos = 0;
     }

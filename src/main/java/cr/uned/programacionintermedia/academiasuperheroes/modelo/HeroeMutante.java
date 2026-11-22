@@ -10,15 +10,15 @@ public class HeroeMutante extends Superheroe{
     private int controlPoder; // Representa un número del 1 al 100
 
     // Método sobrecargado
-    public HeroeMutante(String tipoMutacion, int controlPoder, String nombreHeroico, String nombreReal, String estado, double salarioMensual) {
-        super(nombreHeroico, nombreReal, estado, salarioMensual);
+    public HeroeMutante(String idHeroe, String tipoMutacion, int controlPoder, String nombreHeroico, String nombreReal, String estado, double salarioMensual) {
+        super(idHeroe, nombreHeroico, nombreReal, estado, salarioMensual);
         this.tipoMutacion = tipoMutacion;
         this.controlPoder = controlPoder;
     }
     
-    // Método vacío
+    // Contructor sobrecargado
     public HeroeMutante() {
-        super("", "", "", 0.0);
+        super("", "", "", "", 0.0);
         this.tipoMutacion = "";
         this.controlPoder = 0;
     }

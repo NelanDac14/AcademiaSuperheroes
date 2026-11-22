@@ -15,18 +15,18 @@ public class HeroeTecnologico extends Superheroe{
     private String nivelTecnologia;
     private int cantidadGadgets;
 
-    //Constructores vacíos
-    public HeroeTecnologico() {
-        super("", "", "", 0.0);
-        this.nivelTecnologia = "";
-        this.cantidadGadgets = 0;
-    }
-    
-    //Constructores sobrecargados
-    public HeroeTecnologico(String nivelTecnologia, int cantidadGadgets, String nombreHeroico, String nombreReal, String estado, double salarioMensual) {
-        super(nombreHeroico, nombreReal, estado, salarioMensual);
+    //Constructor
+    public HeroeTecnologico(String nivelTecnologia, int cantidadGadgets, String idHeroe, String nombreHeroico, String nombreReal, String estado, double salarioMensual) {
+        super(idHeroe, nombreHeroico, nombreReal, estado, salarioMensual);
         this.nivelTecnologia = nivelTecnologia;
         this.cantidadGadgets = cantidadGadgets;
+    }
+    
+    //Constructores sobrecargados    
+    public HeroeTecnologico() {
+        super("", "", "", "", 0.0);
+        this.nivelTecnologia = "";
+        this.cantidadGadgets = 0;
     }
 
     public String getNivelTecnologia() {
