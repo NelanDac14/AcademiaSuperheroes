@@ -8,32 +8,61 @@ public class HeroeMagico extends Superheroe{
     private String tipoMagia; // Elemental, Oscura y Sagrada.
     private int cantHechizos; // Número entero ingresado por usuario
 
-    // Constructor sobrecargado
-    public HeroeMagico(String idHeroe, String tipoMagia, int cantHechizos, String nombreHeroico, String nombreReal, String estado, double salarioMensual) {
+    /** 
+     * Constructor de la clase
+     * 
+     * Representa un héroe mágico dentro del programa que
+     * contiene un tipo de magia y una cantidad de hechizos 
+     * como conocimiento para aplicar o atacar
+     * 
+     * @param tipoMagia Tipo de magia que usa
+     * 
+     * @param cantHechizos Cantidad de hechizos conocidos
+     *
+     * @param idHeroe ID único del superhéroe
+     *
+     * @param nombreHeroico Nombre del Superhéroe: debe tener mínimo 3
+     * caracteres y debe ser ingresado por usuario.
+     *
+     * @param nombreReal Nombre real del superhéroe: debe tener mínimo 3
+     * caracteres y debe ser ingresado por usuario.
+     *
+     * @param estado Selección única del usuario entre las siguientes opciones
+     * (Disponible, En misión o Recuperación)
+     *
+     * @param salarioMensual Salario mensual del Superhéroe, dato ingresado por
+     * el usuario
+     * 
+     */
+    public HeroeMagico(String tipoMagia, int cantHechizos, String idHeroe, String nombreHeroico, String nombreReal, String estado, double salarioMensual) {
         super(idHeroe, nombreHeroico, nombreReal, estado, salarioMensual);
         this.tipoMagia = tipoMagia;
         this.cantHechizos = cantHechizos;
     }
     
-    // Constructor vacío
+    // Constructor sobrecargado
     public HeroeMagico() {
         super("", "", "", "", 0.0);
         this.tipoMagia = "";
         this.cantHechizos = 0;
     }
 
+    // Obtiene el tipo de magia
     public String getTipoMagia() {
         return tipoMagia;
     }
 
+    // Coloca el tipo de magia
     public void setTipoMagia(String tipoMagia) {
         this.tipoMagia = tipoMagia;
     }
 
+    // Obtiene la cantidad de hechizos
     public int getCantHechizos() {
         return cantHechizos;
     }
 
+    // Coloca la cantidad de hechizos
     public void setCantHechizos(int cantHechizos) {
         this.cantHechizos = cantHechizos;
     }

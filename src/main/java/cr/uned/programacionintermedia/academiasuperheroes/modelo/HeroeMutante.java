@@ -9,8 +9,31 @@ public class HeroeMutante extends Superheroe{
     private String tipoMutacion; // Genética, Radioactiva y Experimental.
     private int controlPoder; // Representa un número del 1 al 100
 
-    // Método sobrecargado
-    public HeroeMutante(String idHeroe, String tipoMutacion, int controlPoder, String nombreHeroico, String nombreReal, String estado, double salarioMensual) {
+    /** 
+     * Constructor de la clase
+     * 
+     * Representa un héroe mutante dentro del sistema,
+     * este tiene un tipo de mutación y un control de poder
+     * 
+     * @param tipoMutacion Mutación que demuestra el super héroe
+     * 
+     * @param controlPoder El control que tiene sobre dicho poder
+     *
+     * @param idHeroe ID único del superhéroe
+     *
+     * @param nombreHeroico Nombre del Superhéroe: debe tener mínimo 3
+     * caracteres y debe ser ingresado por usuario.
+     *
+     * @param nombreReal Nombre real del superhéroe: debe tener mínimo 3
+     * caracteres y debe ser ingresado por usuario.
+     *
+     * @param estado Selección única del usuario entre las siguientes opciones
+     * (Disponible, En misión o Recuperación)
+     *
+     * @param salarioMensual Salario mensual del Superhéroe, dato ingresado por
+     * el usuario
+     */
+    public HeroeMutante(String tipoMutacion, int controlPoder, String idHeroe, String nombreHeroico, String nombreReal, String estado, double salarioMensual) {
         super(idHeroe, nombreHeroico, nombreReal, estado, salarioMensual);
         this.tipoMutacion = tipoMutacion;
         this.controlPoder = controlPoder;
@@ -23,18 +46,22 @@ public class HeroeMutante extends Superheroe{
         this.controlPoder = 0;
     }
 
+    // Obtiene el tipo de mutación
     public String getTipoMutacion() {
         return tipoMutacion;
     }
 
+    // Coloca el tipo de mutación
     public void setTipoMutacion(String tipoMutacion) {
         this.tipoMutacion = tipoMutacion;
     }
 
+    // Obtiene el control de poder
     public int getControlPoder() {
         return controlPoder;
     }
 
+    // Coloca el control de poder
     public void setControlPoder(int controlPoder) {
         this.controlPoder = controlPoder;
     }
