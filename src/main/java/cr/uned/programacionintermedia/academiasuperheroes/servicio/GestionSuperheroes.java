@@ -935,6 +935,7 @@ public class GestionSuperheroes {
             throw new IllegalArgumentException("Identificador dublicado: " + id);
         }
         
+        //Retornamos el número consecutivo del identificador
         return Integer.parseInt(id.substring(4));
     }
 
