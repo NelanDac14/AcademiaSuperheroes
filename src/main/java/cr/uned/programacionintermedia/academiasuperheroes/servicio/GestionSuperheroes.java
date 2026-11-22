@@ -9,6 +9,9 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.io.BufferedReader;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.ArrayList;
 
 /**
@@ -571,8 +574,8 @@ public class GestionSuperheroes {
                         Paths.get("HeroeMagico.txt"),
                         StandardCharsets.UTF_8);) {
             //Guardamos los héroes tecnológicos
-            for(HeroeTecnologico heroe : heroesTecnologicos){
-                
+            for (HeroeTecnologico heroe : heroesTecnologicos) {
+
                 // Creamos el string linea con el formato correspondiente
                 String linea = String.join(";", heroe.getIdHeroe(),
                         heroe.getNombreHeroico(),
@@ -582,15 +585,15 @@ public class GestionSuperheroes {
                         heroe.getNivelTecnologia(),
                         String.valueOf(heroe.getCantidadGadgets())
                 );
-                
+
                 // Agregamos al archivo .txt correspondiente
                 escritorTecnológico.write(linea);
-                escritorTecnológico.newLine();                
+                escritorTecnológico.newLine();
             }
-            
+
             //Guardamos los héroes Mutantes
-            for(HeroeMutante heroe : heroesMutantes){           
-                
+            for (HeroeMutante heroe : heroesMutantes) {
+
                 // Creamos el string linea con el formato correspondiente
                 String linea = String.join(";",
                         heroe.getIdHeroe(),
@@ -601,15 +604,15 @@ public class GestionSuperheroes {
                         heroe.getTipoMutacion(),
                         String.valueOf(heroe.getControlPoder())
                 );
-                
+
                 // Agregamos al archivo .txt correspondiente
                 escritorMutante.write(linea);
-                escritorMutante.newLine();                
+                escritorMutante.newLine();
             }
-            
+
             //Guardamos los héroes Mutantes
-            for(HeroeMagico heroe : heroesMagicos){           
-                
+            for (HeroeMagico heroe : heroesMagicos) {
+
                 // Creamos el string linea con el formato correspondiente
                 String linea = String.join(";",
                         heroe.getIdHeroe(),
@@ -620,21 +623,319 @@ public class GestionSuperheroes {
                         heroe.getTipoMagia(),
                         String.valueOf(heroe.getCantHechizos())
                 );
-                
+
                 // Agregamos al archivo .txt correspondiente
                 escritorMagico.write(linea);
-                escritorMagico.newLine();                
+                escritorMagico.newLine();
             }
-            
+
             //Se guarda correctamente dentro de sus archivos respectivos
             return true;
 
         } catch (IOException e) {
             // En caso de error se muestra el mensaje 
             System.err.println("Error al guardar los archivos de superhéroes: "
-            + e.getMessage());
+                    + e.getMessage());
             return false;
         }
+    }
+
+    /**
+     * Carga los superhéroes desde los 3 archivos .txt
+     *
+     * Reconstruye cada objeto según su tipo y conserva el identificador
+     * original
+     *
+     * Utiliza colecciones temporales para evitar modificar los registros
+     * actuales en caso de error durante la carga
+     *
+     * @return true si la carga se realiza correctamente; false en caso
+     * contrario
+     */
+    public boolean cargarSuperheroes() {
+        // Colecciones remporales para recuperar registros
+        ArrayList<HeroeTecnologico> tecnologicos = new ArrayList<>();
+        ArrayList<HeroeMutante> mutantes = new ArrayList<>();
+        ArrayList<HeroeMagico> magicos = new ArrayList<>();
+
+        //Controlamos que no existan identificadores repetidos
+        Set<String> identificadores = new HashSet<>();
+
+        // Consevamos el número de ID más alto encontrado
+        int mayoId = 0;
+        try (
+                BufferedReader lectorTecnologico = Files.newBufferedReader(
+                        Paths.get("HeroeTecnologico.txt"),
+                        StandardCharsets.UTF_8); BufferedReader lectorMutante = Files.newBufferedReader(
+                        Paths.get("HeroeMutante.txt"),
+                        StandardCharsets.UTF_8); BufferedReader lectorMagico = Files.newBufferedReader(
+                        Paths.get("HeroeMagico.txt"),
+                        StandardCharsets.UTF_8);) {
+
+            String linea;
+            int numeroLinea;
+
+            // Cargar héroes tecnológicos
+            numeroLinea = 0;
+            while ((linea = lectorTecnologico.readLine()) != null) {
+                // Aumentamos el número de linea en 1
+                numeroLinea++;
+
+                if (linea.trim().isEmpty()) {
+                    // Continuamos en caso de que la linea esté vacía
+                    continue;
+                }
+
+                // Dividimos la linea por su separador ";", almacenamos en datos
+                String[] datos = linea.split(";", -1);
+
+                /* 
+                Si es diferente a la cantidad de datos esperados
+                lanza un error, para este caso 7
+                 */
+                if (datos.length != 7) {
+                    throw new IllegalArgumentException(
+                            "Error en HeroeTecnologico.txt, línea "
+                            + numeroLinea + ": cantidad incorrecta de campos.");
+                }
+
+                //Datos generales
+                String id = datos[0].trim().toUpperCase();
+                String nombreHeroico = datos[1].trim();
+                String nombreReal = datos[2].trim();
+                String estado = datos[3].trim();
+                double salario = Double.parseDouble(datos[4].trim());
+
+                //Datos específicos
+                String nivel = datos[5].trim();
+                int gadgets = Integer.parseInt(datos[6].trim());
+
+                // Validamos el identificador
+                mayoId = Math.max(mayoId, validarIdentificadorCargado(
+                        id, identificadores));
+
+                // Validamos datos generales
+                if (!validarDatosGenerales(
+                        nombreHeroico, nombreReal, estado, salario)) {
+                    // Lanzamos un error por datos generales inválidos
+                    throw new IllegalArgumentException(
+                            "Datos generales inválidos en HeroeTecnologico.txt, línea "
+                            + numeroLinea);
+                }
+
+                // Validamos los datos específicos
+                if (!esOpcionValida(nivel,
+                        "Básico", "Intermedio", "Avanzado")
+                        || gadgets < 0) {
+                    // Lanzamos un error por datos específicos inválidos
+                    throw new IllegalArgumentException(
+                            "Datos tecnológicos inválidos en la línea "
+                            + numeroLinea);
+                }
+                
+                // Reconstruimos el objeto conservando su ID original
+                HeroeTecnologico heroe = new HeroeTecnologico(
+                        nivel, 
+                        gadgets, 
+                        id, 
+                        nombreHeroico, 
+                        nombreReal, 
+                        estado, 
+                        salario);
+                
+                tecnologicos.add(heroe);
+                
+            }
+
+            // Cargar héroes mutantes
+            numeroLinea = 0;
+            while ((linea = lectorMutante.readLine()) != null) {
+                // Aumentamos el número de linea en 1
+                numeroLinea++;
+
+                if (linea.trim().isEmpty()) {
+                    // Continuamos en caso de que la linea esté vacía
+                    continue;
+                }
+
+                // Dividimos la linea por su separador ";", almacenamos en datos
+                String[] datos = linea.split(";", -1);
+
+                /* 
+                Si es diferente a la cantidad de datos esperados
+                lanza un error, para este caso 7
+                 */
+                if (datos.length != 7) {
+                    throw new IllegalArgumentException(
+                            "Error en HeroeMutante.txt, línea "
+                            + numeroLinea + ": cantidad incorrecta de campos.");
+                }
+
+                //Datos generales
+                String id = datos[0].trim().toUpperCase();
+                String nombreHeroico = datos[1].trim();
+                String nombreReal = datos[2].trim();
+                String estado = datos[3].trim();
+                double salario = Double.parseDouble(datos[4].trim());
+
+                //Datos específicos
+                String mutacion = datos[5].trim();
+                int control = Integer.parseInt(datos[6].trim());
+
+                // Validamos el identificador
+                mayoId = Math.max(mayoId, validarIdentificadorCargado(
+                        id, identificadores));
+
+                // Validamos datos generales
+                if (!validarDatosGenerales(
+                        nombreHeroico, nombreReal, estado, salario)) {
+                    // Lanzamos un error por datos generales inválidos
+                    throw new IllegalArgumentException(
+                            "Datos generales inválidos en HeroeMutante.txt, línea "
+                            + numeroLinea);
+                }
+
+                // Validamos los datos específicos
+                if (!esOpcionValida(mutacion,
+                        "Genética", "Radioactiva", "Experimental")
+                        || control < 1 || control > 100) {
+                    // Lanzamos un error por datos específicos inválidos
+                    throw new IllegalArgumentException(
+                            "Datos de mutación inválidos en la línea "
+                            + numeroLinea);
+                }
+                
+                // Reconstruimos el objeto conservando su ID original
+                HeroeMutante heroe = new HeroeMutante(
+                        mutacion, 
+                        control, 
+                        id, 
+                        nombreHeroico, 
+                        nombreReal, 
+                        estado, 
+                        salario);
+                
+                mutantes.add(heroe);
+                
+            }
+
+            // Cargar héroes mágicos
+            numeroLinea = 0;
+            while ((linea = lectorMagico.readLine()) != null) {
+                // Aumentamos el número de linea en 1
+                numeroLinea++;
+
+                if (linea.trim().isEmpty()) {
+                    // Continuamos en caso de que la linea esté vacía
+                    continue;
+                }
+
+                // Dividimos la linea por su separador ";", almacenamos en datos
+                String[] datos = linea.split(";", -1);
+
+                /* 
+                Si es diferente a la cantidad de datos esperados
+                lanza un error, para este caso 7
+                 */
+                if (datos.length != 7) {
+                    throw new IllegalArgumentException(
+                            "Error en HeroeMagico.txt, línea "
+                            + numeroLinea + ": cantidad incorrecta de campos.");
+                }
+
+                //Datos generales
+                String id = datos[0].trim().toUpperCase();
+                String nombreHeroico = datos[1].trim();
+                String nombreReal = datos[2].trim();
+                String estado = datos[3].trim();
+                double salario = Double.parseDouble(datos[4].trim());
+
+                //Datos específicos
+                String magia = datos[5].trim();
+                int hechizos = Integer.parseInt(datos[6].trim());
+
+                // Validamos el identificador
+                mayoId = Math.max(mayoId, validarIdentificadorCargado(
+                        id, identificadores));
+
+                // Validamos datos generales
+                if (!validarDatosGenerales(
+                        nombreHeroico, nombreReal, estado, salario)) {
+                    // Lanzamos un error por datos generales inválidos
+                    throw new IllegalArgumentException(
+                            "Datos generales inválidos en HeroeMagico.txt, línea "
+                            + numeroLinea);
+                }
+
+                // Validamos los datos específicos
+                if (!esOpcionValida(magia,
+                        "Elemental", "Oscura", "Sagrada")
+                        || hechizos < 0) {
+                    // Lanzamos un error por datos específicos inválidos
+                    throw new IllegalArgumentException(
+                            "Datos mágicos inválidos en la línea "
+                            + numeroLinea);
+                }
+                
+                // Reconstruimos el objeto conservando su ID original
+                HeroeMagico heroe = new HeroeMagico(
+                        magia, 
+                        hechizos, 
+                        id, 
+                        nombreHeroico, 
+                        nombreReal, 
+                        estado, 
+                        salario);
+                
+                magicos.add(heroe);
+                
+            }
+            
+            //Actualizamos las colecciones
+            
+            heroesTecnologicos.clear();
+            heroesTecnologicos.addAll(tecnologicos);
+            
+            heroesMutantes.clear();
+            heroesMutantes.addAll(mutantes);
+            
+            heroesMagicos.clear();
+            heroesMagicos.addAll(magicos);
+            
+            //Actualizamos el contador para evitar duplicar ID en héroes
+            Superheroe.setContadorId(Math.max(Superheroe.getContadorId(), mayoId));
+            
+            //Se realiza la carga de manera exitosa
+            return true;
+
+        } catch (Exception e) {
+            System.err.println("Error al cargar los archivos de superhéroes: "
+            + e.getMessage());
+            
+            return false;
+        }
+    }
+    
+    /**
+     * Valida el formato y la unicidad de un identificador recuperado
+     * 
+     * @param id ID del héroe leído desde el archivo
+     * 
+     * @param identificadores colección de IDs ya procesados
+     * 
+     * @return Número consecutivo correspondiente al identificador
+     */
+    private int validarIdentificadorCargado(String id,
+            Set<String> identificadores){
+        if (id == null || !id.matches("HER-\\d{2,}")) {
+            throw new IllegalArgumentException("Indentificador inválido: " + id);
+        }
+        
+        if (!identificadores.add(id)) {
+            throw new IllegalArgumentException("Identificador dublicado: " + id);
+        }
+        
+        return Integer.parseInt(id.substring(4));
     }
 
 }
