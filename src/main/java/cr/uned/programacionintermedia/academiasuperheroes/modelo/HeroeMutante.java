@@ -2,8 +2,19 @@ package cr.uned.programacionintermedia.academiasuperheroes.modelo;
 
 /**
  *
- * @author acuac
+ * Clase hija: HeroeMutante
+ * 
+ * hereda de la clase padre: Superheroe
+ * 
+ * Representa un héroe mutante que mantiene
+ * ciertos atributos específicos, para este caso son:
+ * tipo de mutación y control de poder
+ * 
+ * @author Nelson Andres Acuña Cambronero
+ * 
+ * @version 1.0
  */
+
 public class HeroeMutante extends Superheroe{
     //Atributos
     private String tipoMutacion; // Genética, Radioactiva y Experimental.

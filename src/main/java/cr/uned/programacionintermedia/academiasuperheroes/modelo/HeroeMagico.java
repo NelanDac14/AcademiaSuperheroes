@@ -2,7 +2,17 @@ package cr.uned.programacionintermedia.academiasuperheroes.modelo;
 
 /**
  *
- * @author acuac
+ * Clase hija: HeroeMagico
+ * 
+ * hereda de la clase padre: Superheroe
+ * 
+ * Representa un héroe mágico que mantiene
+ * ciertos atributos específicos, para este caso son:
+ * tipo de magia y cantidad de hechizos
+ * 
+ * @author Nelson Andres Acuña Cambronero
+ * 
+ * @version 1.0
  */
 public class HeroeMagico extends Superheroe{
     private String tipoMagia; // Elemental, Oscura y Sagrada.

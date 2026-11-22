@@ -6,9 +6,13 @@ package cr.uned.programacionintermedia.academiasuperheroes.modelo;
  * 
  * hereda de la clase padre: Superheroe
  * 
- * Representa un héroe tecnológico 
+ * Representa un héroe tecnológico que mantiene
+ * ciertos atributos específicos, para este caso son:
+ * nivel de tecnología y cantidad de gadgets
  * 
  * @author Nelson Andres Acuña Cambronero
+ * 
+ * @version 1.0
  */
 public class HeroeTecnologico extends Superheroe{
     

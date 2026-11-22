@@ -3,7 +3,12 @@ package cr.uned.programacionintermedia.academiasuperheroes.modelo;
 /**
  * Clase padre Superheroe
  *
+ * Representa un superhéroe dentro del sistema con diferentes
+ * atributos en general que puede tener cualquier superhéroe 
+ * sin importar su clase o tipo de superhéroe
+ * 
  * @author Nelson Andrés Acuña Cambronero
+ * 
  * @version 1.0
  */
 public abstract class Superheroe {
