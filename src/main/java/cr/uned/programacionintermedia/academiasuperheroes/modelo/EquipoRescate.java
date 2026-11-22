@@ -1,8 +1,15 @@
 package cr.uned.programacionintermedia.academiasuperheroes.modelo;
+
 /**
- * Representa un Equipo de Rescate dentro del proyecto
+ * Clase EquipoRescate
  *
+ * Representa un equipo de rescate dentro 
+ * del sistema, dispone de una serie de atributos
+ * y contiene una lista de super héroes que 
+ * componen dicho equipo.
+ * 
  * @author Nelson Andrés Acuña Cambronero
+ * 
  * @version 1.0
  */
 
@@ -11,18 +18,29 @@ import java.util.ArrayList;
 public class EquipoRescate {    
 
 //Atributos de la clase
+    // Contador interno de ID
     private static int contadorId;
+    // ID del equipo
     private String idEquipo;
+    // Nombre del equipo
     private String nombreEquipo;
+    // Tipo de emergencia
     private String tipoEmergencia;
+    // Nivel de amenaza 
     private String nivelAmenaza;
+    // Ciudad a la que se asigna el equipo
     private String ciudadAsignada;
+    // Uso de tecnología
     private String usoTecnologiaEspecial;
+    // Lista de superhéroes 
     private ArrayList<Superheroe> listaSuperheroes;
+    // Costo operativo del equipo
     private double costoOperativo;
     
     /**
      * Crea un equipo de rescate dentro del sistema
+     * 
+     * @param idEquipo Identificacíon única del equipo
      * 
      * @param nombreEquipo Nombre que recibirá el equipo de superhéroes, debe
      * tener al menos 3 caracteres
@@ -31,18 +49,21 @@ public class EquipoRescate {
      * creado, dato que elige el usuario de las siguientes opciones: Desastres
      * naturales, Invasión alienígena, Amenaza nuclear o Villano de alto riesgo
      * 
-     * @param nivelAmenaza Nivel de amenaza con el que 
-     * @param ciudadAsignada 
-     * @param usoTecnologiaEspecial 
-     * @param listaSuperheroes 
-     * @param costoOperativo 
+     * @param nivelAmenaza Nivel de amenaza con el que se enfrentará el 
+     * equipo
+     * 
+     * @param ciudadAsignada Ciudad a cargo del equipo
+     * 
+     * @param usoTecnologiaEspecial Declaración de uso de tecnología especial
+     * 
+     * @param listaSuperheroes Superhéroes que forman parte de este equipo de 
+     * rescate
+     * 
+     * @param costoOperativo Valor que conlleva desplegar a este equipo de 
+     * rescate
      */
-
-    
-    
-    public EquipoRescate(String nombreEquipo, String tipoEmergencia, String nivelAmenaza, 
-            String ciudadAsignada, String usoTecnologiaEspecial, ArrayList<Superheroe> listaSuperheroes, 
-            double costoOperativo) {
+    public EquipoRescate(String idEquipo, String nombreEquipo, String tipoEmergencia, String nivelAmenaza, String ciudadAsignada, String usoTecnologiaEspecial, ArrayList<Superheroe> listaSuperheroes, double costoOperativo) {
+        this.idEquipo = idEquipo;
         this.nombreEquipo = nombreEquipo;
         this.tipoEmergencia = tipoEmergencia;
         this.nivelAmenaza = nivelAmenaza;
@@ -51,8 +72,10 @@ public class EquipoRescate {
         this.listaSuperheroes = listaSuperheroes;
         this.costoOperativo = costoOperativo;
     }
-
+    
+    // Constructor sobrecargado
     public EquipoRescate() {
+        this.idEquipo = "";
         this.nombreEquipo = "";
         this.tipoEmergencia = "";
         this.nivelAmenaza = "";
@@ -61,72 +84,100 @@ public class EquipoRescate {
         this.listaSuperheroes = new ArrayList<>();
         this.costoOperativo = 0.0;
     }
+    
+    // Getter and Setter
 
+    // Obtiene el contador de ID
     public static int getContadorId() {
         return contadorId;
     }
 
+    // Coloca el contador del ID
+    public static void setContadorId(int contadorId) {
+        EquipoRescate.contadorId = contadorId;
+    }
+
+    // Obtiene el ID del equipo
     public String getIdEquipo() {
         return idEquipo;
     }
 
+    // Coloca el ID del equipo
+    public void setIdEquipo(String idEquipo) {
+        this.idEquipo = idEquipo;
+    }
+
+    // Obtiene el Nombrre del equipo
     public String getNombreEquipo() {
         return nombreEquipo;
     }
 
+    // Coloca el nombre del equipo
     public void setNombreEquipo(String nombreEquipo) {
         this.nombreEquipo = nombreEquipo;
     }
 
+    // Obtiene el tipo de emergencia
     public String getTipoEmergencia() {
         return tipoEmergencia;
     }
 
+    // Coloca el tipo de emergencia
     public void setTipoEmergencia(String tipoEmergencia) {
         this.tipoEmergencia = tipoEmergencia;
     }
 
+    // Obtiene el nivel de amenaza
     public String getNivelAmenaza() {
         return nivelAmenaza;
     }
 
+    // Coloca el nivel de amenaza
     public void setNivelAmenaza(String nivelAmenaza) {
         this.nivelAmenaza = nivelAmenaza;
     }
 
+    // Obtiene la ciudad a la que fue asignada
     public String getCiudadAsignada() {
         return ciudadAsignada;
     }
 
+    // Coloca la ciudad asignada del equipo
     public void setCiudadAsignada(String ciudadAsignada) {
         this.ciudadAsignada = ciudadAsignada;
     }
 
+    // Obtiene si este usa tecnología especial o no
     public String getUsoTecnologiaEspecial() {
         return usoTecnologiaEspecial;
     }
 
+    // Coloca si este usa tecnología especia o no
     public void setUsoTecnologiaEspecial(String usoTecnologiaEspecial) {
         this.usoTecnologiaEspecial = usoTecnologiaEspecial;
     }
 
+    // Obtiene la lista de superhéroes que conforma el equipo
     public ArrayList<Superheroe> getListaSuperheroes() {
         return listaSuperheroes;
     }
 
+    // Coloca la lista de superhéroes que compone el equipo de resacate
     public void setListaSuperheroes(ArrayList<Superheroe> listaSuperheroes) {
         this.listaSuperheroes = listaSuperheroes;
     }
 
+    // Obtiene el costo operativo que vale este equipo
     public double getCostoOperativo() {
         return costoOperativo;
     }
 
+    // Coloca el costo operativo que vale este equipo
     public void setCostoOperativo(double costoOperativo) {
         this.costoOperativo = costoOperativo;
     }
     
-    
+
     // Métodos adicionales
     
     /**
@@ -134,18 +185,16 @@ public class EquipoRescate {
      * 
      * Genera automáticamente el ID del equipo cada vez que sea
      * necesario, en casos de agregar nuevos equipos de rescate
+     * 
+     * Este debe asignarse mediante el setIdEquipo
+     * 
+     * @return Retorna el ID del equipo de rescate para asignarse al 
+     * equipo
      */
-    public void generadorIdEquipo() {
+    public String generadorIdEquipo() {
         // Aumentamos el contador de héroes
         contadorId++;
-
-        if (String.valueOf(contadorId).length() >= 2) {
-            // En caso de que la numeración del contadorId sea mayor a 9
-            this.idEquipo = "EQU-" + contadorId;
-        } else {
-            // En caso de que la numeración del contadorId sea menor a 9
-            this.idEquipo = "EQU-0" + contadorId;
-        }
+        return String.format("EQU-%02d", contadorId);
     }
     
     /**

@@ -13,6 +13,7 @@ package cr.uned.programacionintermedia.academiasuperheroes.modelo;
  */
 public abstract class Superheroe {
 
+    private static int contadorId;
     private String idHeroe;
     private String nombreHeroico;
     private String nombreReal;
@@ -21,7 +22,7 @@ public abstract class Superheroe {
 
     /**
      * Crea un Superhéroe dentro del sistema
-     *
+     * 
      * @param idHeroe ID único del superhéroe
      *
      * @param nombreHeroico Nombre del Superhéroe: debe tener mínimo 3
@@ -53,6 +54,18 @@ public abstract class Superheroe {
         this.salarioMensual = 0.0;
     }
 
+    // Getter and Setter
+    
+    // Obtiene el contador ID
+    public static int getContadorId() {
+        return contadorId;
+    }
+
+    // Coloca el contador ID
+    public static void setContadorId(int contadorId) {
+        Superheroe.contadorId = contadorId;
+    }
+        
     // Obtiene el ID del Héroe
     public String getIdHeroe() {
         return idHeroe;
@@ -102,7 +115,26 @@ public abstract class Superheroe {
     public void setSalarioMensual(double salarioMensual) {
         this.salarioMensual = salarioMensual;
     }
-
+    
+    //Métodos adicionales
+    
+    /**
+     * Genera el ID del superhéroe
+     * 
+     * Genera automáticamente el ID del héroe cada vez que sea
+     * necesario, en casos de agregar nuevos superhéroes
+     * 
+     * Este debe asignarse mediante el setIdHeroe
+     * 
+     * @return Retorna el ID del superhéroe para asignarse al 
+     * héroe
+     */
+    public String generadorIdHeroe() {
+        // Aumentamos el contador de héroes
+        contadorId++;
+        return String.format("HER-%02d", contadorId);
+    }    
+    
     //Método abstracto
     public abstract double calcularBonificacion();
 }
