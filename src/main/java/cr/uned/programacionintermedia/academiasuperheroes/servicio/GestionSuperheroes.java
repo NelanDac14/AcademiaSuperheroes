@@ -504,4 +504,44 @@ public class GestionSuperheroes {
         return true;
     }
     
+    /**
+     * Elimina un superhéroe de la colección correspondiente
+     * 
+     * Busca el registro mediante su ID y determina a cual 
+     * colección pertenece antes de eliminarlo
+     * 
+     * @param idHeroe ID del superhéroe que se eliminará
+     * 
+     * @return true si se eliminó correctamente; false si no existe
+     * el ID buscado
+     */ 
+    public boolean eliminarHeroe(String idHeroe){
+        // Validamos que el identificador no esté vacío
+        if (idHeroe == null || idHeroe.trim().isEmpty()) {
+            return false;
+        }
+        
+        //Buscamos el superhéroe en las 3 colecciones
+        Superheroe heroe = buscarHeroePorId(idHeroe);
+        
+        // Comprobamos que el registro existe
+        if (heroe == null) {
+            return false;
+        }
+        
+        // Identificamos la colección correspondiente y eliminamos el superhéroe
+        if (heroe instanceof HeroeTecnologico) {
+            //Retorna true una vez eliminado el superhéroe parceado
+            return heroesTecnologicos.remove((HeroeTecnologico) heroe);
+        } else if (heroe instanceof HeroeMutante) {
+            //Retorna true una vez eliminado el superhéroe parceado
+            return heroesMutantes.remove((HeroeMutante) heroe);
+        } else if (heroe instanceof HeroeMagico) {
+            //Retorna true una vez eliminado el superhéroe parceado
+            return heroesMagicos.remove((HeroeMagico) heroe);
+        }
+        
+        return false;
+    }
+    
 }
