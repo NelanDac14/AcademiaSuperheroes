@@ -179,37 +179,132 @@ public class GestionEquipos {
         //Retorna false en caso de no cumplir con las validaciones
         return false;
     }
-    
+
     /**
      * Busca un equipo de rescate mediante su ID
-     * 
-     * Recorre la colección de equipos hasta encontrar un ID 
-     * correspondiente a un equipo
-     * 
+     *
+     * Recorre la colección de equipos hasta encontrar un ID correspondiente a
+     * un equipo
+     *
      * @param idEquipo Identificador del equipo que se desea buscar
-     * 
+     *
      * @return El equipo encontrado o null si no existe
      */
-    public EquipoRescate buscarEquipoPorId(String idEquipo){
+    public EquipoRescate buscarEquipoPorId(String idEquipo) {
         // Validamos que el ID no esté vacío
         if (idEquipo == null || idEquipo.trim().isEmpty()) {
             return null;
         }
-        
+
         // Transferimos el ID validado
         String idBuscado = idEquipo.trim();
-        
+
         // Recorremos los equipos registrados
-        for(EquipoRescate equipo : equipos){
+        for (EquipoRescate equipo : equipos) {
             // Comparamos ID de equipos
             if (equipo.getIdEquipo() != null
                     && equipo.getIdEquipo().equalsIgnoreCase(idBuscado)) {
                 return equipo;
             }
         }
-        
+
         // Si no se encontrara un equipo con el ID, devolvemos null
         return null;
+    }
+    
+    /**
+     * Actualiza la información de un equipo de rescate
+     * 
+     * Busca el equipo por su ID, valida los nuevos datos y 
+     * actualiza su lista de integrantes
+     * 
+     * @param idEquipo ID del equipo a actualizar
+     * 
+     * @param nombreEquipo Nuevo nombre del equipo.
+     * 
+     * @param tipoEmergencia Nuevo tipo de emergencia.
+     * 
+     * @param nivelAmenaza Nuevo nivel de amenaza.
+     * 
+     * @param ciudadAsignada Nueva ciudad asignada.
+     * 
+     * @param usoTecnologiaEspecial Indica si utiliza tecnología especial.
+     * 
+     * @param idsSuperheroes Identificadores de los nuevos integrantes.
+     * 
+     * @return true si la actualización fue exitosa.
+     */
+    
+    public boolean actualizarEquipo(String idEquipo,
+            String nombreEquipo,
+            String tipoEmergencia,
+            String nivelAmenaza,
+            String ciudadAsignada,
+            String usoTecnologiaEspecial,
+            List<String> idsSuperheroes){
+        // Buscamos el equipo que se desea actualizar
+        EquipoRescate equipo = buscarEquipoPorId(idEquipo);
+        
+        // Validamos que el equipo no esté vacío
+        if (equipo == null) {
+            return false;
+        }
+        
+        // Validamos los nuevos datos del equipo
+        if (!validarDatosEquipo(nombreEquipo, tipoEmergencia,
+                nivelAmenaza, ciudadAsignada, usoTecnologiaEspecial)) {
+            return false;
+        }
+        
+        // Se valida que se haya agregado integrantes
+        if (idsSuperheroes == null || idsSuperheroes.isEmpty()
+            || gestionSuperheroes == null){
+            return false;
+        }
+        
+        //Creamos una lista temporal con los nuevos integrantes
+        ArrayList<Superheroe> nuevosIntegrantes =  new ArrayList<>();
+        
+        // Evitamos el duplicado de superhéroes dentro del equipo
+        Set<String> identificadores = new HashSet<>();
+        
+        for(String id : idsSuperheroes){
+            if (id == null || id.trim().isEmpty()) {
+                return false;
+            }
+            
+            // Se transfiere el id una vez validado
+            String idValidado = id.trim().toUpperCase();
+            
+            //Se validad si este no se agrega a identificadores
+            if (!identificadores.add(idValidado)) {
+                return false;
+            }
+            
+            // Buscamos el superhéroe existente
+            Superheroe heroe = gestionSuperheroes.buscarHeroePorId(idValidado);
+            
+            if (heroe == null) {
+                return false;
+            }
+            
+            //Agregamos el nuevo héroe
+            nuevosIntegrantes.add(heroe);
+        }
+        
+        // Actualizamos los datos del equipo
+        equipo.setNombreEquipo(nombreEquipo.trim());
+        equipo.setTipoEmergencia(tipoEmergencia.trim());
+        equipo.setNivelAmenaza(nivelAmenaza.trim());
+        equipo.setCiudadAsignada(ciudadAsignada.trim());
+        equipo.setUsoTecnologiaEspecial(usoTecnologiaEspecial.trim());
+        //Actualizamos la lista de superhéroes del equipo
+        equipo.setListaSuperheroes(nuevosIntegrantes);
+        //Recalculamos el costo operativo del equipo
+        equipo.calcularCostoOperativo();
+       
+        //El equipo se actualiza correctamente
+        return true;
     }
 
 }
