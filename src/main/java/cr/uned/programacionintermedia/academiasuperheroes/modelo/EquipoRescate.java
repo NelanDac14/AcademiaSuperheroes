@@ -221,7 +221,7 @@ public class EquipoRescate {
         
         //Costo adicional según nivel de amenaza
         switch (nivelAmenaza.toLowerCase()) {
-            case "bajo": // Sumar $5,000.00 al costo operativo
+            case "baja": // Sumar $5,000.00 al costo operativo
                 costoOperativo += 5000;
                 break;
             case "medio": // Sumar $15,000.00 al costo operativo
