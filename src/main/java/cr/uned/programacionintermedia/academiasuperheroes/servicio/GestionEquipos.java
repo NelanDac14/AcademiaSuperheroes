@@ -6,6 +6,11 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 /**
  * Clase encargada de gestionar los equipos de superhéroes registrados en la
@@ -305,34 +310,84 @@ public class GestionEquipos {
         //El equipo se actualiza correctamente
         return true;
     }
-    
+
     /**
      * Elimina un equipo de rescate mediante su identificador
-     * 
-     * Busca el equipo registrado y se elimina de la colección si este
-     * existe dentro de ella
-     * 
+     *
+     * Busca el equipo registrado y se elimina de la colección si este existe
+     * dentro de ella
+     *
      * @param idEquipo ID del equipo que se desea eliminar
-     * 
-     * @return true si se elimina el equipo correctamente; false
-     * si ocurre lo contrario.
+     *
+     * @return true si se elimina el equipo correctamente; false si ocurre lo
+     * contrario.
      */
-    public boolean eliminarEquipo(String idEquipo){
+    public boolean eliminarEquipo(String idEquipo) {
         // Validamos que el ID no esté vacío
         if (idEquipo == null || idEquipo.trim().isEmpty()) {
             return false;
         }
-        
+
         // Buscamosel equipo que se desea eliminar
         EquipoRescate equipo = buscarEquipoPorId(idEquipo);
-        
+
         // Comprobamos que el equipo exista
         if (equipo == null) {
-            return false;            
+            return false;
         }
-        
+
         // Eliminamos el equipo de la coleccion
         return equipos.remove(equipo);
+    }
+
+    /**
+     * 
+     */
+    public boolean guardarEquipos() {
+        try (BufferedWriter escritor = Files.newBufferedWriter(Paths.get(
+                "Equipos.txt"), StandardCharsets.UTF_8)) {
+
+            // Recorremos todos los equipos registrados
+            for (EquipoRescate equipo : equipos) {
+                //Validamos que el equipo tenga su lista de integrantes
+                if (equipo == null || equipo.getListaSuperheroes() == null) {
+                    return false;
+                }
+
+                // Recuperamos los ID de los integrantes
+                ArrayList<String> idsSuperheroes = new ArrayList<>();
+
+                // Recorremos la lista de superhéroes del equipo para validar
+                for (Superheroe heroe : equipo.getListaSuperheroes()) {
+                    if (heroe == null || heroe.getIdHeroe() == null
+                            || heroe.getIdHeroe().trim().isEmpty()) {
+                        return false;
+                    }
+                    // Agregamos a la lista de IDs
+                    idsSuperheroes.add(heroe.getIdHeroe());
+                }
+
+                //Construimos la línea con todos los datos del equipo
+                String linea = String.join(";",
+                        equipo.getIdEquipo(),
+                        equipo.getNombreEquipo(),
+                        equipo.getTipoEmergencia(),
+                        equipo.getNivelAmenaza(),
+                        equipo.getCiudadAsignada(),
+                        equipo.getUsoTecnologiaEspecial(),
+                        String.valueOf(equipo.getCostoOperativo()),
+                        String.join(",", idsSuperheroes));
+
+                // Escribimos los datos en el archivo Equipos.txt
+                escritor.write(linea);
+                escritor.newLine();
+            }
+            // Retorna true por agregar correctamente los datos
+            return true;
+        } catch (IOException e) {
+            System.err.println("Error al guardar los equipos: " + e.getMessage());
+            return false;
+        }
     }
 
 }
