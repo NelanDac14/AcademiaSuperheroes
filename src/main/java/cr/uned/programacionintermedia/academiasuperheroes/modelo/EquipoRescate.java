@@ -224,10 +224,10 @@ public class EquipoRescate {
             case "baja": // Sumar $5,000.00 al costo operativo
                 costoOperativo += 5000;
                 break;
-            case "medio": // Sumar $15,000.00 al costo operativo
+            case "media": // Sumar $15,000.00 al costo operativo
                 costoOperativo += 15000;                
                 break;
-            case "alto": // Sumar $30,000.00 al costo operativo
+            case "alta": // Sumar $30,000.00 al costo operativo
                 costoOperativo += 30000;                
                 break;
             default:

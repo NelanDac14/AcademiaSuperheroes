@@ -4,6 +4,10 @@
  */
 package cr.uned.programacionintermedia.academiasuperheroes.vista;
 
+import cr.uned.programacionintermedia.academiasuperheroes.servicio.GestionEquipos;
+import cr.uned.programacionintermedia.academiasuperheroes.servicio.GestionSuperheroes;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author acuac
@@ -11,12 +15,47 @@ package cr.uned.programacionintermedia.academiasuperheroes.vista;
 public class VentanaPrincipal extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(VentanaPrincipal.class.getName());
-
+    private final GestionSuperheroes gestionSuperheroes;
+    private final GestionEquipos gestionEquipos;
+    
     /**
-     * Creates new form VentanaPrincipal
+     * Constructor vacío
+     *
+     * Permite la iniciación sin parámetros
      */
-    public VentanaPrincipal() {
+    public VentanaPrincipal(){
+        this(new GestionSuperheroes());
+    }
+    
+    /**
+     * Constructor de la ventana principal
+     * 
+     * @param gestionSuperheroes Administrador de superhéroes
+     */
+    public VentanaPrincipal(GestionSuperheroes gestionSuperheroes) {
         initComponents();
+        
+        this.gestionSuperheroes = gestionSuperheroes;
+        
+        this.gestionEquipos = new GestionEquipos(this.gestionSuperheroes);
+        
+        configurarEventos();
+    }
+    
+    private void configurarEventos(){
+        //Evento del botón salir
+        btnSalir.addActionListener(e -> {
+            // Construimos el dialogo de mensaje 
+            int respuesta = JOptionPane.showConfirmDialog(this, 
+                    "¿Desea salir de la aplicación?",
+                    "Confirmar salida",
+                    JOptionPane.YES_NO_OPTION);
+            
+            // Si la respuesta es sí, salimos del sistema
+            if (respuesta == JOptionPane.YES_OPTION) {
+                System.exit(0);
+            }
+        });
     }
 
     /**

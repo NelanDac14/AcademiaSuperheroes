@@ -1,5 +1,7 @@
 package cr.uned.programacionintermedia.academiasuperheroes;
 
+import cr.uned.programacionintermedia.academiasuperheroes.servicio.GestionEquipos;
+import cr.uned.programacionintermedia.academiasuperheroes.servicio.GestionSuperheroes;
 import cr.uned.programacionintermedia.academiasuperheroes.vista.VentanaPrincipal;
 import javax.swing.SwingUtilities;
 
@@ -16,8 +18,12 @@ public class AcademiaSuperheroes {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(()->{
+            
+            //Creamos el administrador de superhéroes
+            GestionSuperheroes gestionSuperheroes = new GestionSuperheroes();
+            
             // Creamos un objeto de tipo Ventana Principal
-            VentanaPrincipal ventana = new VentanaPrincipal();
+            VentanaPrincipal ventana = new VentanaPrincipal(gestionSuperheroes);
             // Asignamos la ubicación en pantalla
             ventana.setLocationRelativeTo(null);
             // La hacemos visible al usuario

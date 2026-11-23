@@ -337,6 +337,84 @@ public class GestionSuperheroes {
     }
 
     /**
+     * Obtiene todos los superhéroes registrados en la academia.
+     *
+     * Recorre las tres colecciones independientes y reúne los objetos en una
+     * nueva lista de tipo Superheroe.
+     *
+     * @return Lista con todos los superhéroes registrados.
+     */
+    public ArrayList<Superheroe> obtenerTodosLosSuperheroes() {
+
+        // Lista que contendrá todos los superhéroes.
+        ArrayList<Superheroe> todosLosHeroes = new ArrayList<>();
+
+        // Recorremos los héroes tecnológicos.
+        for (HeroeTecnologico heroe : heroesTecnologicos) {
+            todosLosHeroes.add(heroe);
+        }
+
+        // Recorremos los héroes mutantes.
+        for (HeroeMutante heroe : heroesMutantes) {
+            todosLosHeroes.add(heroe);
+        }
+
+        // Recorremos los héroes mágicos.
+        for (HeroeMagico heroe : heroesMagicos) {
+            todosLosHeroes.add(heroe);
+        }
+
+        return todosLosHeroes;
+    }
+
+    /**
+     * Obtiene los superhéroes correspondientes a un tipo específico.
+     *
+     * Recorre la colección del tipo seleccionado y reúne los resultados en una
+     * lista de tipo Superheroe.
+     *
+     * @param tipo Tipo de superhéroe que se desea consultar.
+     * @return Lista de superhéroes del tipo seleccionado.
+     */
+    public ArrayList<Superheroe> obtenerSuperheroesPorTipo(String tipo) {
+
+        // Lista que contendrá los resultados de la búsqueda.
+        ArrayList<Superheroe> heroesEncontrados = new ArrayList<>();
+
+        // Validamos que se haya seleccionado un tipo.
+        if (tipo == null || tipo.trim().isEmpty()) {
+            return heroesEncontrados;
+        }
+
+        // Comprobamos el tipo de superhéroe seleccionado.
+        if (tipo.equalsIgnoreCase("Tecnológico")
+                || tipo.equalsIgnoreCase("Tecnologico")) {
+
+            // Recorremos los héroes tecnológicos.
+            for (HeroeTecnologico heroe : heroesTecnologicos) {
+                heroesEncontrados.add(heroe);
+            }
+
+        } else if (tipo.equalsIgnoreCase("Mutante")) {
+
+            // Recorremos los héroes mutantes.
+            for (HeroeMutante heroe : heroesMutantes) {
+                heroesEncontrados.add(heroe);
+            }
+
+        } else if (tipo.equalsIgnoreCase("Mágico")
+                || tipo.equalsIgnoreCase("Magico")) {
+
+            // Recorremos los héroes mágicos.
+            for (HeroeMagico heroe : heroesMagicos) {
+                heroesEncontrados.add(heroe);
+            }
+        }
+
+        return heroesEncontrados;
+    }
+
+    /**
      * Actualizar Superhéroe
      *
      * Busca el superhéroe mediante su ID y actualiza sus atributos generales y
@@ -732,19 +810,19 @@ public class GestionSuperheroes {
                             "Datos tecnológicos inválidos en la línea "
                             + numeroLinea);
                 }
-                
+
                 // Reconstruimos el objeto conservando su ID original
                 HeroeTecnologico heroe = new HeroeTecnologico(
-                        nivel, 
-                        gadgets, 
-                        id, 
-                        nombreHeroico, 
-                        nombreReal, 
-                        estado, 
+                        nivel,
+                        gadgets,
+                        id,
+                        nombreHeroico,
+                        nombreReal,
+                        estado,
                         salario);
-                
+
                 tecnologicos.add(heroe);
-                
+
             }
 
             // Cargar héroes mutantes
@@ -804,19 +882,19 @@ public class GestionSuperheroes {
                             "Datos de mutación inválidos en la línea "
                             + numeroLinea);
                 }
-                
+
                 // Reconstruimos el objeto conservando su ID original
                 HeroeMutante heroe = new HeroeMutante(
-                        mutacion, 
-                        control, 
-                        id, 
-                        nombreHeroico, 
-                        nombreReal, 
-                        estado, 
+                        mutacion,
+                        control,
+                        id,
+                        nombreHeroico,
+                        nombreReal,
+                        estado,
                         salario);
-                
+
                 mutantes.add(heroe);
-                
+
             }
 
             // Cargar héroes mágicos
@@ -876,65 +954,64 @@ public class GestionSuperheroes {
                             "Datos mágicos inválidos en la línea "
                             + numeroLinea);
                 }
-                
+
                 // Reconstruimos el objeto conservando su ID original
                 HeroeMagico heroe = new HeroeMagico(
-                        magia, 
-                        hechizos, 
-                        id, 
-                        nombreHeroico, 
-                        nombreReal, 
-                        estado, 
+                        magia,
+                        hechizos,
+                        id,
+                        nombreHeroico,
+                        nombreReal,
+                        estado,
                         salario);
-                
+
                 magicos.add(heroe);
-                
+
             }
-            
+
             //Actualizamos las colecciones
-            
             heroesTecnologicos.clear();
             heroesTecnologicos.addAll(tecnologicos);
-            
+
             heroesMutantes.clear();
             heroesMutantes.addAll(mutantes);
-            
+
             heroesMagicos.clear();
             heroesMagicos.addAll(magicos);
-            
+
             //Actualizamos el contador para evitar duplicar ID en héroes
             Superheroe.setContadorId(Math.max(Superheroe.getContadorId(), mayoId));
-            
+
             //Se realiza la carga de manera exitosa
             return true;
 
         } catch (Exception e) {
             System.err.println("Error al cargar los archivos de superhéroes: "
-            + e.getMessage());
-            
+                    + e.getMessage());
+
             return false;
         }
     }
-    
+
     /**
      * Valida el formato y la unicidad de un identificador recuperado
-     * 
+     *
      * @param id ID del héroe leído desde el archivo
-     * 
+     *
      * @param identificadores colección de IDs ya procesados
-     * 
+     *
      * @return Número consecutivo correspondiente al identificador
      */
     private int validarIdentificadorCargado(String id,
-            Set<String> identificadores){
+            Set<String> identificadores) {
         if (id == null || !id.matches("HER-\\d{2,}")) {
             throw new IllegalArgumentException("Indentificador inválido: " + id);
         }
-        
+
         if (!identificadores.add(id)) {
             throw new IllegalArgumentException("Identificador dublicado: " + id);
         }
-        
+
         //Retornamos el número consecutivo del identificador
         return Integer.parseInt(id.substring(4));
     }

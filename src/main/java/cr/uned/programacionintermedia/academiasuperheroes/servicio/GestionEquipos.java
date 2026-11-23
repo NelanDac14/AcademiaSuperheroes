@@ -86,7 +86,7 @@ public class GestionEquipos {
         // Evitamos asignar 2 veces el mismo superhéroe
         Set<String> identificadores = new HashSet<>();
 
-        for (String id : identificadores) {
+        for (String id : idsSuperheroes) {
             if (id == null || id.trim().isEmpty()) {
                 return false;
             }
@@ -558,7 +558,108 @@ public class GestionEquipos {
     }
 
     /**
-     * 
+     * Obtiene todos los equipos registrados en la academia.
+     *
+     * Recorre la colección de equipos y devuelve una nueva lista con los
+     * registros encontrados.
+     *
+     * @return Lista de todos los equipos registrados.
+     */
+    public ArrayList<EquipoRescate> obtenerTodosLosEquipos() {
+
+        // Lista que contendrá los equipos encontrados.
+        ArrayList<EquipoRescate> todosLosEquipos = new ArrayList<>();
+
+        // Recorremos los equipos registrados.
+        for (EquipoRescate equipo : equipos) {
+
+            if (equipo != null) {
+                todosLosEquipos.add(equipo);
+            }
+        }
+
+        return todosLosEquipos;
+    }
+
+    /**
+     * Busca el equipo que presenta el mayor costo operativo.
+     *
+     * Recorre todos los equipos registrados y compara sus respectivos costos
+     * operativos.
+     *
+     * @return Equipo con mayor costo operativo o null si no existen equipos
+     * registrados.
+     */
+    public EquipoRescate obtenerEquipoMayorCosto() {
+
+        // Variable que conservará el equipo de mayor costo.
+        EquipoRescate equipoMayorCosto = null;
+
+        // Recorremos todos los equipos.
+        for (EquipoRescate equipo : equipos) {
+
+            if (equipo == null) {
+                continue;
+            }
+
+            // Comparamos los costos operativos.
+            if (equipoMayorCosto == null
+                    || equipo.getCostoOperativo()
+                    > equipoMayorCosto.getCostoOperativo()) {
+
+                equipoMayorCosto = equipo;
+            }
+        }
+
+        return equipoMayorCosto;
+    }
+
+    /**
+     * Obtiene los equipos correspondientes a un tipo específico de emergencia.
+     *
+     * Recorre la colección y compara el tipo de emergencia de cada equipo con
+     * el criterio proporcionado.
+     *
+     * @param tipoEmergencia Tipo de emergencia que se desea consultar.
+     * @return Lista de equipos que coinciden con el criterio.
+     */
+    public ArrayList<EquipoRescate> obtenerEquiposPorTipoEmergencia(
+            String tipoEmergencia) {
+
+        // Lista que almacenará los resultados.
+        ArrayList<EquipoRescate> equiposEncontrados = new ArrayList<>();
+
+        // Validamos el criterio de búsqueda.
+        if (tipoEmergencia == null
+                || tipoEmergencia.trim().isEmpty()) {
+
+            return equiposEncontrados;
+        }
+
+        // Normalizamos el criterio recibido.
+        String tipoBuscado = tipoEmergencia.trim();
+
+        // Recorremos todos los equipos registrados.
+        for (EquipoRescate equipo : equipos) {
+
+            if (equipo == null
+                    || equipo.getTipoEmergencia() == null) {
+                continue;
+            }
+
+            // Comparamos el tipo de emergencia.
+            if (equipo.getTipoEmergencia()
+                    .equalsIgnoreCase(tipoBuscado)) {
+
+                equiposEncontrados.add(equipo);
+            }
+        }
+
+        return equiposEncontrados;
+    }
+
+    /**
+     *
      */
     private int validarIdentificadorEquipoCargado(String id,
             Set<String> identificadores) {
@@ -575,7 +676,7 @@ public class GestionEquipos {
             throw new IllegalArgumentException(
                     "Identificador de equipo duplicado: " + id);
         }
-        
+
         //Retornamos el número del ID
         return Integer.parseInt(id.substring(4));
     }
