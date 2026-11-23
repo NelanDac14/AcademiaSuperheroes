@@ -4,19 +4,86 @@
  */
 package cr.uned.programacionintermedia.academiasuperheroes.vista;
 
+import cr.uned.programacionintermedia.academiasuperheroes.servicio.GestionEquipos;
+import cr.uned.programacionintermedia.academiasuperheroes.servicio.GestionSuperheroes;
+import cr.uned.programacionintermedia.academiasuperheroes.modelo.EquipoRescate;
+import cr.uned.programacionintermedia.academiasuperheroes.modelo.Superheroe;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+import javax.swing.DefaultListModel;
+import javax.swing.JOptionPane;
+import javax.swing.ListSelectionModel;
+import javax.swing.table.DefaultTableModel;
+
 /**
+ * Ventana gráfica de equipos de rescate
  *
- * @author acuac
+ * Se encarga de mostrar el entorno gráfico donde se desarrollará toda la
+ * gestión de equipos de rescate
+ *
+ * @author Nelson Andres Acuña Cambronero
+ *
+ * @version 1.0
  */
 public class VentanaEquiposRescate extends javax.swing.JFrame {
-    
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(VentanaEquiposRescate.class.getName());
+    private final GestionSuperheroes gestionSuperheroes;
+    private final GestionEquipos gestionEquipos;
 
     /**
-     * Creates new form VentanaEquiposRescate
+     * Constructor para pruebas independientes.
      */
     public VentanaEquiposRescate() {
+        this(new GestionSuperheroes());
+    }
+
+    /**
+     * Constructor que crea su propio administrador de equipos.
+     */
+    public VentanaEquiposRescate(GestionSuperheroes gestionSuperheroes) {
+        this(gestionSuperheroes, new GestionEquipos(gestionSuperheroes));
+    }
+
+    /**
+     * Constructor que recibe los servicios compartidos.
+     */
+    public VentanaEquiposRescate(
+            GestionSuperheroes gestionSuperheroes,
+            GestionEquipos gestionEquipos) {
+
         initComponents();
+
+        this.gestionSuperheroes = gestionSuperheroes;
+        this.gestionEquipos = gestionEquipos;
+
+        // Quitamos los textos de ejemplo del diseñador para evitar
+        // que se registren como datos reales si el usuario no los cambia.
+        txtfNombreEquipo.setText("");
+        txtCiudadAsignada.setText("");
+
+        setDefaultCloseOperation(
+                javax.swing.WindowConstants.DISPOSE_ON_CLOSE
+        );
+
+        // Permitimos seleccionar varios superhéroes en ambas listas.
+        listaHeroesDisponibles.setSelectionMode(
+                ListSelectionModel.MULTIPLE_INTERVAL_SELECTION
+        );
+        listaHeroesAsignados.setSelectionMode(
+                ListSelectionModel.MULTIPLE_INTERVAL_SELECTION
+        );
+
+        // Sustituimos los datos de ejemplo del diseñador por modelos vacíos.
+        listaHeroesDisponibles.setModel(new DefaultListModel<>());
+        listaHeroesAsignados.setModel(new DefaultListModel<>());
+
+        configurarTablaEquipos();
+        configurarEventos();
+        actualizarTablaEquipos();
+        actualizarListaHeroesDisponibles();
+        actualizarIdSiguiente();
     }
 
     /**
@@ -128,17 +195,20 @@ public class VentanaEquiposRescate extends javax.swing.JFrame {
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
         jLabel8.setText("¿Usa tecnología especial?");
 
+        jrbSi.setBackground(new java.awt.Color(11, 5, 78));
         btnGrupoRadioBoton.add(jrbSi);
         jrbSi.setFont(new java.awt.Font("Aero Matics", 0, 14)); // NOI18N
         jrbSi.setForeground(new java.awt.Color(255, 255, 255));
         jrbSi.setText("Sí");
         jrbSi.addActionListener(this::jrbSiActionPerformed);
 
+        jrbNo.setBackground(new java.awt.Color(11, 5, 78));
         btnGrupoRadioBoton.add(jrbNo);
         jrbNo.setFont(new java.awt.Font("Aero Matics", 0, 14)); // NOI18N
         jrbNo.setForeground(new java.awt.Color(255, 255, 255));
         jrbNo.setText("No");
 
+        tablaListaEquipos.setFont(new java.awt.Font("Aero Matics", 0, 14)); // NOI18N
         tablaListaEquipos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null, null, null},
@@ -162,6 +232,7 @@ public class VentanaEquiposRescate extends javax.swing.JFrame {
         tablaListaEquipos.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(tablaListaEquipos);
 
+        listaHeroesDisponibles.setFont(new java.awt.Font("Aero Matics", 0, 14)); // NOI18N
         listaHeroesDisponibles.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
@@ -169,6 +240,7 @@ public class VentanaEquiposRescate extends javax.swing.JFrame {
         });
         jScrollPane2.setViewportView(listaHeroesDisponibles);
 
+        listaHeroesAsignados.setFont(new java.awt.Font("Aero Matics", 0, 14)); // NOI18N
         listaHeroesAsignados.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
@@ -191,24 +263,32 @@ public class VentanaEquiposRescate extends javax.swing.JFrame {
         jLabel11.setForeground(new java.awt.Color(255, 255, 255));
         jLabel11.setText("LISTA DE EQUIPOS DE RESCATE");
 
+        btnAgregar.setFont(new java.awt.Font("Aero Matics", 0, 14)); // NOI18N
         btnAgregar.setText("Agregar");
 
+        btnActualizar.setFont(new java.awt.Font("Aero Matics", 0, 14)); // NOI18N
         btnActualizar.setText("Actualizar");
 
+        btnEliminar.setFont(new java.awt.Font("Aero Matics", 0, 14)); // NOI18N
         btnEliminar.setText("Eliminar");
         btnEliminar.addActionListener(this::btnEliminarActionPerformed);
 
+        btnGuardarDatos.setFont(new java.awt.Font("Aero Matics", 0, 14)); // NOI18N
         btnGuardarDatos.setText("Guardar datos");
         btnGuardarDatos.addActionListener(this::btnGuardarDatosActionPerformed);
 
+        btnCargarDatos.setFont(new java.awt.Font("Aero Matics", 0, 14)); // NOI18N
         btnCargarDatos.setText("Cargar datos");
         btnCargarDatos.addActionListener(this::btnCargarDatosActionPerformed);
 
+        btnLimpiar.setFont(new java.awt.Font("Aero Matics", 0, 14)); // NOI18N
         btnLimpiar.setText("Limpiar");
         btnLimpiar.addActionListener(this::btnLimpiarActionPerformed);
 
+        btnAgregarIntegrantes.setFont(new java.awt.Font("Aero Matics", 0, 14)); // NOI18N
         btnAgregarIntegrantes.setText(">>");
 
+        btnQuitarIntegrantes.setFont(new java.awt.Font("Aero Matics", 0, 14)); // NOI18N
         btnQuitarIntegrantes.setText("<<");
         btnQuitarIntegrantes.setActionCommand("");
         btnQuitarIntegrantes.addActionListener(this::btnQuitarIntegrantesActionPerformed);
@@ -344,7 +424,7 @@ public class VentanaEquiposRescate extends javax.swing.JFrame {
                     .addComponent(btnGuardarDatos)
                     .addComponent(btnCargarDatos)
                     .addComponent(btnLimpiar))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel11)
@@ -380,24 +460,630 @@ public class VentanaEquiposRescate extends javax.swing.JFrame {
     }//GEN-LAST:event_jrbSiActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
-        // TODO add your handling code here:
+        eliminarEquipoSeleccionado();
     }//GEN-LAST:event_btnEliminarActionPerformed
 
     private void btnGuardarDatosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarDatosActionPerformed
-        // TODO add your handling code here:
+        guardarDatos();
     }//GEN-LAST:event_btnGuardarDatosActionPerformed
 
     private void btnCargarDatosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCargarDatosActionPerformed
-        // TODO add your handling code here:
+        cargarDatos();
     }//GEN-LAST:event_btnCargarDatosActionPerformed
 
     private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
-        // TODO add your handling code here:
+        limpiarFormulario();
     }//GEN-LAST:event_btnLimpiarActionPerformed
 
     private void btnQuitarIntegrantesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuitarIntegrantesActionPerformed
-        // TODO add your handling code here:
+        quitarIntegrantesSeleccionados();
     }//GEN-LAST:event_btnQuitarIntegrantesActionPerformed
+
+    /**
+     * Configura la tabla que presenta los equipos registrados.
+     * Se impide que el usuario modifique directamente sus celdas.
+     */
+    private void configurarTablaEquipos() {
+        DefaultTableModel modelo = new DefaultTableModel(
+                new Object[]{
+                    "ID", "Nombre equipo", "Tipo emergencia",
+                    "Lista superhéroes", "Nivel amenaza", "Ciudad asignada",
+                    "¿Usa tecnología?", "Costo operativo"
+                }, 0) {
+            @Override
+            public boolean isCellEditable(int fila, int columna) {
+                return false;
+            }
+        };
+
+        tablaListaEquipos.setModel(modelo);
+        tablaListaEquipos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        tablaListaEquipos.setRowSelectionAllowed(true);
+        tablaListaEquipos.setColumnSelectionAllowed(false);
+    }
+
+    /**
+     * Conecta los botones y la selección de la tabla con las operaciones
+     * correspondientes de la ventana.
+     */
+    private void configurarEventos() {
+        btnAgregar.addActionListener(e -> registrarEquipo());
+        btnActualizar.addActionListener(e -> actualizarEquipoSeleccionado());
+        btnAgregarIntegrantes.addActionListener(e -> agregarIntegrantesSeleccionados());
+
+        tablaListaEquipos.getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()
+                    && tablaListaEquipos.getSelectedRow() >= 0) {
+                cargarEquipoSeleccionado();
+            }
+        });
+    }
+
+    /**
+     * Agrega un equipo a partir de los datos del formulario.
+     */
+    private void registrarEquipo() {
+        if (!validarFormulario()) {
+            return;
+        }
+
+        ArrayList<String> idsSuperheroes = obtenerIdsAsignados();
+
+        if (idsSuperheroes.isEmpty()) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Debe asignar al menos un superhéroe al equipo.",
+                    "Datos incompletos",
+                    JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
+
+        boolean registrado = gestionEquipos.agregarEquipo(
+                txtfNombreEquipo.getText().trim(),
+                jcbTipoEmergencia.getSelectedItem().toString(),
+                jcbNivelAmenaza.getSelectedItem().toString(),
+                txtCiudadAsignada.getText().trim(),
+                obtenerUsoTecnologiaSeleccionado(),
+                idsSuperheroes
+        );
+
+        if (registrado) {
+            actualizarTablaEquipos();
+            JOptionPane.showMessageDialog(
+                    this,
+                    "El equipo se registró correctamente.",
+                    "Registro exitoso",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
+            limpiarFormulario();
+        } else {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "No fue posible registrar el equipo. Revise los datos y "
+                    + "confirme que los superhéroes seleccionados existan.",
+                    "No se pudo registrar",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
+    }
+
+    /**
+     * Actualiza el equipo que se encuentra seleccionado en la tabla.
+     */
+    private void actualizarEquipoSeleccionado() {
+        String idEquipo = obtenerIdEquipoSeleccionado();
+
+        if (idEquipo == null) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Seleccione un equipo de la tabla para actualizarlo.",
+                    "Equipo no seleccionado",
+                    JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
+
+        if (!validarFormulario()) {
+            return;
+        }
+
+        ArrayList<String> idsSuperheroes = obtenerIdsAsignados();
+
+        if (idsSuperheroes.isEmpty()) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "El equipo debe tener al menos un superhéroe asignado.",
+                    "Datos incompletos",
+                    JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
+
+        boolean actualizado = gestionEquipos.actualizarEquipo(
+                idEquipo,
+                txtfNombreEquipo.getText().trim(),
+                jcbTipoEmergencia.getSelectedItem().toString(),
+                jcbNivelAmenaza.getSelectedItem().toString(),
+                txtCiudadAsignada.getText().trim(),
+                obtenerUsoTecnologiaSeleccionado(),
+                idsSuperheroes
+        );
+
+        if (actualizado) {
+            actualizarTablaEquipos();
+            seleccionarFilaPorId(idEquipo);
+            JOptionPane.showMessageDialog(
+                    this,
+                    "La información del equipo se actualizó correctamente.",
+                    "Actualización exitosa",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
+        } else {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "No fue posible actualizar el equipo. Revise los datos "
+                    + "y los integrantes asignados.",
+                    "No se pudo actualizar",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
+    }
+
+    /**
+     * Elimina el equipo seleccionado después de solicitar confirmación.
+     */
+    private void eliminarEquipoSeleccionado() {
+        String idEquipo = obtenerIdEquipoSeleccionado();
+
+        if (idEquipo == null) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Seleccione el equipo que desea eliminar.",
+                    "Equipo no seleccionado",
+                    JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
+
+        int respuesta = JOptionPane.showConfirmDialog(
+                this,
+                "¿Está seguro de que desea eliminar el equipo " + idEquipo + "?",
+                "Confirmar eliminación",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE
+        );
+
+        if (respuesta == JOptionPane.YES_OPTION) {
+            if (gestionEquipos.eliminarEquipo(idEquipo)) {
+                actualizarTablaEquipos();
+                limpiarFormulario();
+                JOptionPane.showMessageDialog(
+                        this,
+                        "El equipo se eliminó correctamente.",
+                        "Eliminación exitosa",
+                        JOptionPane.INFORMATION_MESSAGE
+                );
+            } else {
+                JOptionPane.showMessageDialog(
+                        this,
+                        "No fue posible eliminar el equipo seleccionado.",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE
+                );
+            }
+        }
+    }
+
+    /**
+     * Añade a la lista de integrantes los superhéroes seleccionados
+     * en la lista de disponibles.
+     */
+    private void agregarIntegrantesSeleccionados() {
+        java.util.List<String> seleccionados = listaHeroesDisponibles.getSelectedValuesList();
+
+        if (seleccionados.isEmpty()) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Seleccione uno o varios superhéroes disponibles.",
+                    "Selección requerida",
+                    JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
+
+        DefaultListModel<String> modeloDisponibles =
+                (DefaultListModel<String>) listaHeroesDisponibles.getModel();
+        DefaultListModel<String> modeloAsignados =
+                (DefaultListModel<String>) listaHeroesAsignados.getModel();
+        Set<String> idsAsignados = new HashSet<>(obtenerIdsAsignados());
+
+        for (String elemento : seleccionados) {
+            String idHeroe = extraerIdHeroe(elemento);
+
+            if (idsAsignados.add(idHeroe)) {
+                modeloAsignados.addElement(elemento);
+            }
+
+            modeloDisponibles.removeElement(elemento);
+        }
+
+        listaHeroesDisponibles.clearSelection();
+    }
+
+    /**
+     * Devuelve los integrantes seleccionados a la lista de disponibles.
+     */
+    private void quitarIntegrantesSeleccionados() {
+        java.util.List<String> seleccionados = listaHeroesAsignados.getSelectedValuesList();
+
+        if (seleccionados.isEmpty()) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Seleccione uno o varios integrantes que desea quitar.",
+                    "Selección requerida",
+                    JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
+
+        DefaultListModel<String> modeloDisponibles =
+                (DefaultListModel<String>) listaHeroesDisponibles.getModel();
+        DefaultListModel<String> modeloAsignados =
+                (DefaultListModel<String>) listaHeroesAsignados.getModel();
+
+        for (String elemento : seleccionados) {
+            modeloAsignados.removeElement(elemento);
+            if (!modeloDisponibles.contains(elemento)) {
+                modeloDisponibles.addElement(elemento);
+            }
+        }
+
+        listaHeroesAsignados.clearSelection();
+    }
+
+    /**
+     * Comprueba que los campos obligatorios del formulario tengan valores.
+     * Las validaciones de negocio también se realizan en GestionEquipos.
+     *
+     * @return true cuando los datos básicos están completos.
+     */
+    private boolean validarFormulario() {
+        if (txtfNombreEquipo.getText() == null
+                || txtfNombreEquipo.getText().trim().length() < 3) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "El nombre del equipo debe tener al menos tres caracteres.",
+                    "Nombre inválido",
+                    JOptionPane.WARNING_MESSAGE
+            );
+            txtfNombreEquipo.requestFocus();
+            return false;
+        }
+
+        if (jcbTipoEmergencia.getSelectedIndex() <= 0) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Seleccione el tipo de emergencia.",
+                    "Dato requerido",
+                    JOptionPane.WARNING_MESSAGE
+            );
+            jcbTipoEmergencia.requestFocus();
+            return false;
+        }
+
+        if (jcbNivelAmenaza.getSelectedIndex() <= 0) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Seleccione el nivel de amenaza.",
+                    "Dato requerido",
+                    JOptionPane.WARNING_MESSAGE
+            );
+            jcbNivelAmenaza.requestFocus();
+            return false;
+        }
+
+        if (txtCiudadAsignada.getText() == null
+                || txtCiudadAsignada.getText().trim().length() < 3) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "La ciudad asignada debe tener al menos tres caracteres.",
+                    "Ciudad inválida",
+                    JOptionPane.WARNING_MESSAGE
+            );
+            txtCiudadAsignada.requestFocus();
+            return false;
+        }
+
+        if (!jrbSi.isSelected() && !jrbNo.isSelected()) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Indique si el equipo utiliza tecnología especial.",
+                    "Dato requerido",
+                    JOptionPane.WARNING_MESSAGE
+            );
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Obtiene el valor seleccionado para el uso de tecnología especial.
+     *
+     * @return "Sí" o "No" según la selección del formulario.
+     */
+    private String obtenerUsoTecnologiaSeleccionado() {
+        return jrbSi.isSelected() ? "Sí" : "No";
+    }
+
+    /**
+     * Recupera los identificadores de los superhéroes que aparecen
+     * en la lista de integrantes asignados.
+     *
+     * @return Lista de identificadores de los integrantes.
+     */
+    private ArrayList<String> obtenerIdsAsignados() {
+        ArrayList<String> ids = new ArrayList<>();
+        DefaultListModel<String> modelo =
+                (DefaultListModel<String>) listaHeroesAsignados.getModel();
+
+        for (int i = 0; i < modelo.size(); i++) {
+            String id = extraerIdHeroe(modelo.getElementAt(i));
+            if (!id.isEmpty() && !ids.contains(id)) {
+                ids.add(id);
+            }
+        }
+
+        return ids;
+    }
+
+    /**
+     * Extrae el identificador HER-XX del texto mostrado en las listas.
+     *
+     * @param texto Texto visible en la lista.
+     * @return Identificador del superhéroe.
+     */
+    private String extraerIdHeroe(String texto) {
+        if (texto == null) {
+            return "";
+        }
+
+        int separador = texto.indexOf(" - ");
+        if (separador < 0) {
+            return texto.trim();
+        }
+
+        return texto.substring(0, separador).trim();
+    }
+
+    /**
+     * Actualiza el contenido de la tabla a partir de los equipos registrados.
+     */
+    private void actualizarTablaEquipos() {
+        DefaultTableModel modelo = (DefaultTableModel) tablaListaEquipos.getModel();
+        modelo.setRowCount(0);
+
+        for (EquipoRescate equipo : gestionEquipos.obtenerTodosLosEquipos()) {
+            StringBuilder integrantes = new StringBuilder();
+
+            for (Superheroe heroe : equipo.getListaSuperheroes()) {
+                if (integrantes.length() > 0) {
+                    integrantes.append(", ");
+                }
+                integrantes.append(heroe.getIdHeroe())
+                        .append(" - ")
+                        .append(heroe.getNombreHeroico());
+            }
+
+            modelo.addRow(new Object[]{
+                equipo.getIdEquipo(),
+                equipo.getNombreEquipo(),
+                equipo.getTipoEmergencia(),
+                integrantes.toString(),
+                equipo.getNivelAmenaza(),
+                equipo.getCiudadAsignada(),
+                equipo.getUsoTecnologiaEspecial(),
+                equipo.getCostoOperativo()
+            });
+        }
+    }
+
+    /**
+     * Actualiza la lista de superhéroes disponibles, excluyendo los que
+     * ya están asignados al equipo que se está editando.
+     */
+    private void actualizarListaHeroesDisponibles() {
+        DefaultListModel<String> modelo =
+                (DefaultListModel<String>) listaHeroesDisponibles.getModel();
+        modelo.clear();
+
+        Set<String> idsAsignados = new HashSet<>(obtenerIdsAsignados());
+
+        for (Superheroe heroe : gestionSuperheroes.obtenerTodosLosSuperheroes()) {
+            if (heroe != null && heroe.getIdHeroe() != null
+                    && !idsAsignados.contains(heroe.getIdHeroe())) {
+                modelo.addElement(
+                        heroe.getIdHeroe() + " - " + heroe.getNombreHeroico()
+                );
+            }
+        }
+    }
+
+    /**
+     * Carga en el formulario los datos del equipo seleccionado en la tabla.
+     */
+    private void cargarEquipoSeleccionado() {
+        String idEquipo = obtenerIdEquipoSeleccionado();
+
+        if (idEquipo == null) {
+            return;
+        }
+
+        EquipoRescate equipo = gestionEquipos.buscarEquipoPorId(idEquipo);
+
+        if (equipo == null) {
+            return;
+        }
+
+        txtIdHeroe.setText(equipo.getIdEquipo());
+        txtfNombreEquipo.setText(equipo.getNombreEquipo());
+        jcbTipoEmergencia.setSelectedItem(equipo.getTipoEmergencia());
+        jcbNivelAmenaza.setSelectedItem(equipo.getNivelAmenaza());
+        txtCiudadAsignada.setText(equipo.getCiudadAsignada());
+
+        btnGrupoRadioBoton.clearSelection();
+        if ("Sí".equalsIgnoreCase(equipo.getUsoTecnologiaEspecial())) {
+            jrbSi.setSelected(true);
+        } else {
+            jrbNo.setSelected(true);
+        }
+
+        DefaultListModel<String> modeloAsignados =
+                (DefaultListModel<String>) listaHeroesAsignados.getModel();
+        modeloAsignados.clear();
+
+        for (Superheroe heroe : equipo.getListaSuperheroes()) {
+            modeloAsignados.addElement(
+                    heroe.getIdHeroe() + " - " + heroe.getNombreHeroico()
+            );
+        }
+
+        actualizarListaHeroesDisponibles();
+    }
+
+    /**
+     * Obtiene el identificador del equipo seleccionado en la tabla.
+     *
+     * @return ID del equipo o null si no hay una fila seleccionada.
+     */
+    private String obtenerIdEquipoSeleccionado() {
+        int filaVista = tablaListaEquipos.getSelectedRow();
+
+        if (filaVista < 0) {
+            return null;
+        }
+
+        int filaModelo = tablaListaEquipos.convertRowIndexToModel(filaVista);
+        Object valor = tablaListaEquipos.getModel().getValueAt(filaModelo, 0);
+
+        return valor == null ? null : valor.toString();
+    }
+
+    /**
+     * Selecciona en la tabla un equipo a partir de su identificador.
+     *
+     * @param idEquipo Identificador del equipo que se desea seleccionar.
+     */
+    private void seleccionarFilaPorId(String idEquipo) {
+        for (int fila = 0; fila < tablaListaEquipos.getRowCount(); fila++) {
+            int filaModelo = tablaListaEquipos.convertRowIndexToModel(fila);
+            Object valor = tablaListaEquipos.getModel().getValueAt(filaModelo, 0);
+
+            if (valor != null && valor.toString().equalsIgnoreCase(idEquipo)) {
+                tablaListaEquipos.setRowSelectionInterval(fila, fila);
+                return;
+            }
+        }
+    }
+
+    /**
+     * Limpia el formulario y prepara la ventana para registrar otro equipo.
+     */
+    private void limpiarFormulario() {
+        tablaListaEquipos.clearSelection();
+        txtfNombreEquipo.setText("");
+        txtCiudadAsignada.setText("");
+        jcbTipoEmergencia.setSelectedIndex(0);
+        jcbNivelAmenaza.setSelectedIndex(0);
+        btnGrupoRadioBoton.clearSelection();
+
+        ((DefaultListModel<String>) listaHeroesAsignados.getModel()).clear();
+        actualizarListaHeroesDisponibles();
+        actualizarIdSiguiente();
+    }
+
+    /**
+     * Muestra el siguiente identificador que será asignado a un equipo nuevo.
+     */
+    private void actualizarIdSiguiente() {
+        int siguiente = EquipoRescate.getContadorId() + 1;
+        txtIdHeroe.setText(String.format("EQU-%02d", siguiente));
+    }
+
+    /**
+     * Guarda los superhéroes y los equipos para mantener sincronizados
+     * los identificadores que se utilizan entre ambos archivos.
+     */
+    private void guardarDatos() {
+        if (!gestionSuperheroes.guardarSuperheroes()) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "No se pudieron guardar los archivos de superhéroes. "
+                    + "Revise la consola para conocer el error.",
+                    "Error al guardar",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
+
+        if (gestionEquipos.guardarEquipos()) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Los superhéroes y los equipos se guardaron correctamente.",
+                    "Datos guardados",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
+        } else {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "No se pudieron guardar los equipos. Revise la consola "
+                    + "para conocer el error.",
+                    "Error al guardar",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
+    }
+
+    /**
+     * Carga primero los superhéroes y luego reconstruye los equipos a partir
+     * de los identificadores almacenados en Equipos.txt.
+     */
+    private void cargarDatos() {
+        if (!gestionSuperheroes.cargarSuperheroes()) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "No se pudieron cargar los archivos de superhéroes. "
+                    + "Compruebe que existan y que sus datos sean correctos.",
+                    "Error al cargar",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
+
+        if (!gestionEquipos.cargarEquipos()) {
+            actualizarTablaEquipos();
+            actualizarListaHeroesDisponibles();
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Los superhéroes se cargaron, pero no fue posible cargar "
+                    + "los equipos. Compruebe el archivo Equipos.txt y que "
+                    + "los identificadores de sus integrantes existan.",
+                    "Error al cargar equipos",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
+
+        actualizarTablaEquipos();
+        limpiarFormulario();
+        JOptionPane.showMessageDialog(
+                this,
+                "Los superhéroes y los equipos se cargaron correctamente.",
+                "Datos cargados",
+                JOptionPane.INFORMATION_MESSAGE
+        );
+    }
 
     /**
      * @param args the command line arguments

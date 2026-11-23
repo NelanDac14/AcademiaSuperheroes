@@ -488,7 +488,7 @@ public class GestionSuperheroes {
             HeroeMagico nuevosDatos = (HeroeMagico) datosActualizados;
 
             if (!esOpcionValida(nuevosDatos.getTipoMagia(),
-                    "Elemental", "Oscura", " Sagrada")
+                    "Elemental", "Oscura", "Sagrada")
                     || nuevosDatos.getCantHechizos() < 0) {
                 return false;
             }

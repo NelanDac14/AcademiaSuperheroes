@@ -1,6 +1,5 @@
 package cr.uned.programacionintermedia.academiasuperheroes;
 
-import cr.uned.programacionintermedia.academiasuperheroes.servicio.GestionEquipos;
 import cr.uned.programacionintermedia.academiasuperheroes.servicio.GestionSuperheroes;
 import cr.uned.programacionintermedia.academiasuperheroes.vista.VentanaPrincipal;
 import javax.swing.SwingUtilities;

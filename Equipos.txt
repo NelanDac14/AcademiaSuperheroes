@@ -1,0 +1,1 @@
+EQU-01;Estimaciones;Desastres naturales;Media;Guatuso;Sí;41400.0;HER-01

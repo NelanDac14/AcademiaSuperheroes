@@ -8,9 +8,16 @@ import cr.uned.programacionintermedia.academiasuperheroes.servicio.GestionEquipo
 import cr.uned.programacionintermedia.academiasuperheroes.servicio.GestionSuperheroes;
 import javax.swing.JOptionPane;
 
+
 /**
+ * Ventana gráfica Principal
  *
- * @author acuac
+ * Se encarga de mostrar el entorno gráfico donde se desarrollará el
+ * menú principal de la aplicación
+ *
+ * @author Nelson Andres Acuña Cambronero
+ *
+ * @version 1.0
  */
 public class VentanaPrincipal extends javax.swing.JFrame {
     
@@ -43,19 +50,44 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     }
     
     private void configurarEventos(){
-        //Evento del botón salir
-        btnSalir.addActionListener(e -> {
-            // Construimos el dialogo de mensaje 
-            int respuesta = JOptionPane.showConfirmDialog(this, 
-                    "¿Desea salir de la aplicación?",
-                    "Confirmar salida",
-                    JOptionPane.YES_NO_OPTION);
-            
-            // Si la respuesta es sí, salimos del sistema
-            if (respuesta == JOptionPane.YES_OPTION) {
-                System.exit(0);
-            }
-        });
+
+    // Abre la gestión de superhéroes.
+    btnGestHeroes.addActionListener(e -> {
+
+        VentanaSuperheroes ventana =
+                new VentanaSuperheroes(gestionSuperheroes);
+
+        ventana.setLocationRelativeTo(this);
+        ventana.setVisible(true);
+    });
+
+    // Abre la gestión de equipos.
+    btnGestEquipos.addActionListener(e -> {
+
+        VentanaEquiposRescate ventana =
+                new VentanaEquiposRescate(
+                        gestionSuperheroes,
+                        gestionEquipos
+                );
+
+        ventana.setLocationRelativeTo(this);
+        ventana.setVisible(true);
+    });
+
+    // Confirmación para salir.
+    btnSalir.addActionListener(e -> {
+
+        int respuesta = JOptionPane.showConfirmDialog(
+                this,
+                "¿Desea salir de la aplicación?",
+                "Confirmar salida",
+                JOptionPane.YES_NO_OPTION
+        );
+
+        if (respuesta == JOptionPane.YES_OPTION) {
+            System.exit(0);
+        }
+    });
     }
 
     /**
@@ -78,19 +110,20 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         lblEstadisticas = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
+        txtHeroesRegistrados = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
+        txtEquiposRegistrados = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
+        txtHeroesDisponibles = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
-        jLabel8 = new javax.swing.JLabel();
+        txtHeroesMision = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         jPanel5 = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
+        txtHeroesRecuperacion = new javax.swing.JLabel();
+        jSeparator1 = new javax.swing.JSeparator();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Academia de Superhéroes - Menú Principal");
@@ -98,6 +131,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         setResizable(false);
 
         pnlPrincipal.setBackground(new java.awt.Color(11, 5, 78));
+        pnlPrincipal.setFont(new java.awt.Font("Aero Matics", 1, 14)); // NOI18N
         pnlPrincipal.setPreferredSize(new java.awt.Dimension(775, 600));
 
         lblTitulo.setFont(new java.awt.Font("Aero Matics", 1, 22)); // NOI18N
@@ -106,52 +140,41 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         lblTitulo.setText("ACADEMIA DE SUPERHÉROES");
 
         lblSubtitulo.setFont(new java.awt.Font("Aero Matics", 0, 18)); // NOI18N
-        lblSubtitulo.setForeground(new java.awt.Color(255, 255, 51));
+        lblSubtitulo.setForeground(new java.awt.Color(255, 255, 255));
         lblSubtitulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblSubtitulo.setText("Sistema de Gestión");
 
-        btnGestHeroes.setBackground(new java.awt.Color(0, 102, 153));
         btnGestHeroes.setFont(new java.awt.Font("Aero Matics", 1, 14)); // NOI18N
-        btnGestHeroes.setForeground(new java.awt.Color(255, 255, 255));
         btnGestHeroes.setText("Gestión de Superhéroes");
         btnGestHeroes.setPreferredSize(new java.awt.Dimension(300, 75));
 
-        btnGestEquipos.setBackground(new java.awt.Color(0, 102, 0));
         btnGestEquipos.setFont(new java.awt.Font("Aero Matics", 1, 14)); // NOI18N
-        btnGestEquipos.setForeground(new java.awt.Color(255, 255, 255));
         btnGestEquipos.setText("Gestión de Equipos");
         btnGestEquipos.setPreferredSize(new java.awt.Dimension(300, 75));
 
-        btnModReportes.setBackground(new java.awt.Color(102, 0, 153));
         btnModReportes.setFont(new java.awt.Font("Aero Matics", 1, 14)); // NOI18N
-        btnModReportes.setForeground(new java.awt.Color(255, 255, 255));
         btnModReportes.setText("Módulo de Reportes");
         btnModReportes.setPreferredSize(new java.awt.Dimension(300, 75));
 
-        btnSalir.setBackground(new java.awt.Color(204, 0, 0));
         btnSalir.setFont(new java.awt.Font("Aero Matics", 1, 14)); // NOI18N
-        btnSalir.setForeground(new java.awt.Color(255, 255, 255));
         btnSalir.setText("Salir");
         btnSalir.setPreferredSize(new java.awt.Dimension(300, 75));
 
         pnlEstadísticas.setBackground(new java.awt.Color(0, 0, 50));
 
         lblEstadisticas.setFont(new java.awt.Font("Aero Matics", 1, 14)); // NOI18N
-        lblEstadisticas.setForeground(new java.awt.Color(255, 255, 0));
+        lblEstadisticas.setForeground(new java.awt.Color(255, 255, 255));
         lblEstadisticas.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblEstadisticas.setText("ESTADÍSTICAS RÁPIDAS");
         lblEstadisticas.setPreferredSize(new java.awt.Dimension(162, 17));
 
-        jPanel1.setBackground(new java.awt.Color(0, 100, 157));
         jPanel1.setPreferredSize(new java.awt.Dimension(50, 70));
 
         jLabel1.setFont(new java.awt.Font("Aero Matics", 1, 14)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("Superhéroes registrados");
 
-        jLabel2.setFont(new java.awt.Font("Aero Matics", 1, 18)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel2.setText("0");
+        txtHeroesRegistrados.setFont(new java.awt.Font("Aero Matics", 1, 18)); // NOI18N
+        txtHeroesRegistrados.setText("0");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -160,72 +183,65 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(txtHeroesRegistrados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel1)))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel2)
-                .addContainerGap(14, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtHeroesRegistrados)
+                .addContainerGap())
         );
 
-        jPanel2.setBackground(new java.awt.Color(0, 100, 157));
         jPanel2.setPreferredSize(new java.awt.Dimension(50, 70));
 
         jLabel4.setFont(new java.awt.Font("Aero Matics", 1, 14)); // NOI18N
-        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setText("Equipos activos");
 
-        jLabel3.setFont(new java.awt.Font("Aero Matics", 1, 18)); // NOI18N
-        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel3.setText("0");
+        txtEquiposRegistrados.setFont(new java.awt.Font("Aero Matics", 1, 18)); // NOI18N
+        txtEquiposRegistrados.setText("0");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(53, 53, 53)
+                .addGap(31, 31, 31)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(txtEquiposRegistrados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(59, 59, 59))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(12, 12, 12)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel3)
-                .addContainerGap(14, Short.MAX_VALUE))
+                .addComponent(txtEquiposRegistrados))
         );
 
-        jPanel3.setBackground(new java.awt.Color(0, 100, 157));
         jPanel3.setPreferredSize(new java.awt.Dimension(50, 70));
 
         jLabel5.setFont(new java.awt.Font("Aero Matics", 1, 14)); // NOI18N
-        jLabel5.setForeground(new java.awt.Color(255, 255, 255));
         jLabel5.setText("Héroes disponibles");
 
-        jLabel6.setFont(new java.awt.Font("Aero Matics", 1, 18)); // NOI18N
-        jLabel6.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel6.setText("0");
+        txtHeroesDisponibles.setFont(new java.awt.Font("Aero Matics", 1, 18)); // NOI18N
+        txtHeroesDisponibles.setText("0");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(31, 31, 31)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel6))
-                .addContainerGap())
+                    .addComponent(txtHeroesDisponibles))
+                .addGap(26, 26, 26))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -233,31 +249,28 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel6)
-                .addContainerGap(14, Short.MAX_VALUE))
+                .addComponent(txtHeroesDisponibles)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jPanel4.setBackground(new java.awt.Color(0, 100, 157));
         jPanel4.setPreferredSize(new java.awt.Dimension(50, 70));
 
-        jLabel8.setFont(new java.awt.Font("Aero Matics", 1, 18)); // NOI18N
-        jLabel8.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel8.setText("0");
+        txtHeroesMision.setFont(new java.awt.Font("Aero Matics", 1, 18)); // NOI18N
+        txtHeroesMision.setText("0");
 
         jLabel7.setFont(new java.awt.Font("Aero Matics", 1, 14)); // NOI18N
-        jLabel7.setForeground(new java.awt.Color(255, 255, 255));
         jLabel7.setText("Héroes en misión");
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGap(29, 29, 29)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel8))
-                .addContainerGap())
+                    .addComponent(txtHeroesMision))
+                .addGap(33, 33, 33))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -265,40 +278,36 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel7)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel8)
-                .addContainerGap(14, Short.MAX_VALUE))
+                .addComponent(txtHeroesMision)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jPanel5.setBackground(new java.awt.Color(0, 100, 157));
         jPanel5.setPreferredSize(new java.awt.Dimension(50, 70));
 
         jLabel10.setFont(new java.awt.Font("Aero Matics", 1, 14)); // NOI18N
-        jLabel10.setForeground(new java.awt.Color(255, 255, 255));
         jLabel10.setText("Héroes en recuperación");
 
-        jLabel9.setFont(new java.awt.Font("Aero Matics", 1, 18)); // NOI18N
-        jLabel9.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel9.setText("0");
+        txtHeroesRecuperacion.setFont(new java.awt.Font("Aero Matics", 1, 18)); // NOI18N
+        txtHeroesRecuperacion.setText("0");
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
-                .addContainerGap(53, Short.MAX_VALUE)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGap(28, 28, 28)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, 163, Short.MAX_VALUE)
-                    .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+                    .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(txtHeroesRecuperacion, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(31, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel10)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel9)
-                .addContainerGap(14, Short.MAX_VALUE))
+                .addComponent(txtHeroesRecuperacion))
         );
 
         javax.swing.GroupLayout pnlEstadísticasLayout = new javax.swing.GroupLayout(pnlEstadísticas);
@@ -321,15 +330,15 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             .addGroup(pnlEstadísticasLayout.createSequentialGroup()
                 .addComponent(lblEstadisticas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -339,14 +348,14 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlPrincipalLayout.createSequentialGroup()
                 .addGap(93, 93, 93)
-                .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(btnModReportes, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btnGestHeroes, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btnGestEquipos, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btnSalir, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(lblSubtitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(lblTitulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnModReportes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnGestHeroes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnGestEquipos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnSalir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblSubtitulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jSeparator1))
                 .addGap(104, 104, 104)
                 .addComponent(pnlEstadísticas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(44, Short.MAX_VALUE))
@@ -356,20 +365,24 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             .addGroup(pnlPrincipalLayout.createSequentialGroup()
                 .addGap(80, 80, 80)
                 .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(pnlEstadísticas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(pnlPrincipalLayout.createSequentialGroup()
+                        .addComponent(pnlEstadísticas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(pnlPrincipalLayout.createSequentialGroup()
                         .addComponent(lblTitulo)
                         .addGap(18, 18, 18)
                         .addComponent(lblSubtitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE)
                         .addComponent(btnGestHeroes, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(btnGestEquipos, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(btnModReportes, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(79, 79, 79))
+                        .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(79, 79, 79))))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -418,23 +431,24 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private javax.swing.JButton btnSalir;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
+    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JLabel lblEstadisticas;
     private javax.swing.JLabel lblSubtitulo;
     private javax.swing.JLabel lblTitulo;
     private javax.swing.JPanel pnlEstadísticas;
     private javax.swing.JPanel pnlPrincipal;
+    private javax.swing.JLabel txtEquiposRegistrados;
+    private javax.swing.JLabel txtHeroesDisponibles;
+    private javax.swing.JLabel txtHeroesMision;
+    private javax.swing.JLabel txtHeroesRecuperacion;
+    private javax.swing.JLabel txtHeroesRegistrados;
     // End of variables declaration//GEN-END:variables
 }
