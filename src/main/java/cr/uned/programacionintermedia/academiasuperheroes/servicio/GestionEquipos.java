@@ -7,10 +7,11 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 import java.io.BufferedWriter;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.io.BufferedReader;
+import java.io.IOException;
 
 /**
  * Clase encargada de gestionar los equipos de superhéroes registrados en la
@@ -341,7 +342,11 @@ public class GestionEquipos {
     }
 
     /**
-     * 
+     * Guarda todos los equipos registrados en el archivo Equipos.txt
+     *
+     * Almacena los datos del equipo y todos sus integrantes
+     *
+     * @return true si el archivo se crea y se guarda correctamente
      */
     public boolean guardarEquipos() {
         try (BufferedWriter escritor = Files.newBufferedWriter(Paths.get(
@@ -388,6 +393,191 @@ public class GestionEquipos {
             System.err.println("Error al guardar los equipos: " + e.getMessage());
             return false;
         }
+    }
+
+    /**
+     * Carga los equipos de rescate almacenanos en Equipos.txt
+     *
+     * Reconstruye cada equipo y recupera sus integrantes mediante los IDs
+     * almacenados
+     *
+     * Utiliza una colección temporal para evitar modificaciones erróneas a los
+     * registros actuales
+     *
+     * @return true si la carga se realiza correctamente; en caso contrario
+     * retorna false
+     */
+    public boolean cargarEquipos() {
+        // Colección temporal para almacenar los equipos
+        ArrayList<EquipoRescate> equiposCargados = new ArrayList<>();
+
+        // Controlamos que no se dupliquen los ID de los equipos
+        Set<String> IdEquipos = new HashSet<>();
+
+        // Se conserva el consecutivo más alto
+        int mayorId = 0;
+
+        try (BufferedReader lector = Files.newBufferedReader(Paths.get("Equipos.txt"),
+                StandardCharsets.UTF_8)) {
+            String linea;
+            int numeroLinea = 0;
+
+            // Leemos el archivo línea por línea
+            while ((linea = lector.readLine()) != null) {
+                // Aumentamos el número de línea en 1
+                numeroLinea++;
+
+                // Validamos que la línea no esté vacía
+                if (linea.trim().isEmpty()) {
+                    // Continueamos con la siguiente si está vacía
+                    continue;
+                }
+
+                // Separamos los 8 campos del equipo
+                String[] datos = linea.split(";", -1);
+
+                //Validamos los 8 datos del equipo
+                if (datos.length != 8) {
+                    //Lanzamos una exepción
+                    throw new IllegalArgumentException(
+                            "Cantidad incorrecta de campos en Equipos.txt, línea "
+                            + numeroLinea);
+                }
+
+                // Recuperamos los datos del equipo
+                String idEquipo = datos[0].trim().toUpperCase();
+                String nombreEquipo = datos[1].trim();
+                String tipoEmergencia = datos[2].trim();
+                String nivelAmenaza = datos[3].trim();
+                String ciudadAsignada = datos[4].trim();
+                String usoTecnologia = datos[5].trim();
+
+                // Recuperamos y validamos el costo operativo que se guardó
+                double costoOperativo = Double.parseDouble(datos[6].trim());
+
+                if (!Double.isFinite(costoOperativo) || costoOperativo < 0) {
+                    // Se lanza una exepción
+                    throw new IllegalArgumentException(
+                            "Costo operativo inválido en la línea "
+                            + numeroLinea);
+                }
+
+                // Validamos el ID y evitamos duplicados
+                mayorId = Math.max(mayorId, validarIdentificadorEquipoCargado(idEquipo,
+                        IdEquipos));
+
+                // Validamos los datos del equipo cargado
+                if (!validarDatosEquipo(nombreEquipo, tipoEmergencia,
+                        nivelAmenaza, ciudadAsignada, usoTecnologia)) {
+                    // Lanzamos la exepción
+                    throw new IllegalArgumentException(
+                            "Datos inválidos en Equipos.txt, línea "
+                            + numeroLinea);
+                }
+
+                // Recuperamos los ID de los integrantes
+                if (datos[7].trim().isEmpty()) {
+                    // Lanzamos la exepción si está vacío
+                    throw new IllegalArgumentException(
+                            "El equipo no tiene integrantes en la línea "
+                            + numeroLinea);
+                }
+
+                //Divimos el String obtenido del archivo
+                String[] idsSuperheroes = datos[7].split(",", -1);
+
+                // Lista temporal de superhéroes del equipo
+                ArrayList<Superheroe> integrantes = new ArrayList<>();
+
+                // Evitamos la repetición de superhéroes en el mismo equipo
+                Set<String> idsIntegrantes = new HashSet<>();
+
+                for (String idHeroe : idsSuperheroes) {
+                    String idValidado = idHeroe.trim().toUpperCase();
+
+                    if (idValidado.isEmpty() || !idsIntegrantes.add(idValidado)) {
+                        // Lanzamos la exepción
+                        throw new IllegalArgumentException(
+                                "Identificador de héroe vacío o repetido "
+                                + "en la línea " + numeroLinea);
+                    }
+
+                    // Recuperamos el héroe original desde Gestión de Superhéroes
+                    Superheroe heroe = gestionSuperheroes.buscarHeroePorId(idValidado);
+
+                    //Validamos que el heroe no sea nulo
+                    if (heroe == null) {
+                        // Lanzamos exepcion
+                        throw new IllegalArgumentException(
+                                "No existe el superhéroe " + idValidado
+                                + " utilizado por el equipo de la línea "
+                                + numeroLinea);
+                    }
+
+                    // Agregamos a la lista de integrantes los héroes no repetidos
+                    integrantes.add(heroe);
+                }
+
+                // Reconstruimos el equipo conservando su identificador.
+                EquipoRescate equipo = new EquipoRescate(
+                        idEquipo,
+                        nombreEquipo,
+                        tipoEmergencia,
+                        nivelAmenaza,
+                        ciudadAsignada,
+                        usoTecnologia,
+                        integrantes,
+                        costoOperativo);
+
+                // Recalculamos el costo operativo de los datos actuales
+                equipo.calcularCostoOperativo();
+
+                //Agregamos el equipo a la colección temporal
+                equiposCargados.add(equipo);
+            }
+
+            //Sustituimos los equipos actuales por los obtenidos del archivo
+            equipos.clear();
+            equipos.addAll(equiposCargados);
+
+            //Actualizamos el contador ID para evitar repeticiones
+            EquipoRescate.setContadorId(Math.max(EquipoRescate.getContadorId(),
+                    mayorId));
+
+            //Retorna true por exitosa recuperación de datos
+            return true;
+
+        } catch (IOException | IllegalArgumentException e) {
+
+            // Lanzamos la exepción
+            System.err.println(
+                    "Error al cargar los equipos: " + e.getMessage());
+
+            return false;
+        }
+    }
+
+    /**
+     * 
+     */
+    private int validarIdentificadorEquipoCargado(String id,
+            Set<String> identificadores) {
+        // Validamos el formato y que no sea nulo
+        if (id == null || !id.matches("EQU-\\d{2,}")) {
+            // Se lanza la exepción
+            throw new IllegalArgumentException(
+                    "Identificador de equipo inválido: " + id);
+        }
+
+        // Si no se agrega es por que está duplicado
+        if (!identificadores.add(id)) {
+            // Se lanza la exepción
+            throw new IllegalArgumentException(
+                    "Identificador de equipo duplicado: " + id);
+        }
+        
+        //Retornamos el número del ID
+        return Integer.parseInt(id.substring(4));
     }
 
 }
